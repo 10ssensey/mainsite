@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>tenssense — от 0 до 5.0 NTRP за 3 года</title>
+<meta name="description" content="Система обучения теннису для взрослых и детей: от нуля до 5.0 NTRP за три года. Онлайн постановка техники + офлайн работа на корте.">
+<link rel="preconnect" href="https://fonts.googleapis.com/">
+<link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700;800&family=Unbounded:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+ *  tenssense — Stadium Dark theme
+ *  Brand: chartreuse #D8FF3D on court-navy #0D1A26
+ * ============================================================ */
+
+:root {
+  /* Brand */
+  --primary:        #D8FF3D;
+  --primary-hover:  #E3FF66;
+  --primary-press:  #C2EB29;
+  --primary-pale:   rgba(216, 255, 61, 0.12);
+  --on-primary:     #0D1A26;
+
+  /* Clay accent */
+  --clay:           #D45D2E;
+  --clay-deep:      #8a3818;
+
+  /* Surfaces — dark stadium */
+  --bg:             #0A1119;
+  --bg-2:           #0D1A26;
+  --bg-3:           #142433;
+  --bg-4:           #1C2E40;
+
+  /* Ink (on dark) */
+  --ink:            #F4F0E8;
+  --ink-2:          #B4BFCC;
+  --ink-3:          #7C8896;
+  --ink-disabled:   #4D5663;
+
+  /* Lines */
+  --line:           rgba(244, 240, 232, 0.08);
+  --line-2:         rgba(244, 240, 232, 0.16);
+  --line-brand:     rgba(216, 255, 61, 0.32);
+
+  /* Type */
+  --font-display:   "Unbounded", "Inter", system-ui, sans-serif;
+  --font-body:      "Onest", "Inter", system-ui, sans-serif;
+
+  /* Radii */
+  --r-pill:         999px;
+  --r-card:         20px;
+  --r-input:        12px;
+  --r-block:        28px;
+
+  /* Motion */
+  --ease-court:     cubic-bezier(0.22, 1, 0.36, 1);
+  --fast:           160ms;
+  --base:           320ms;
+  --slow:           680ms;
+
+  /* Layout */
+  --container:      1240px;
+  --gutter:         24px;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  font-variant-numeric: tabular-nums;
+  overflow-x: hidden;
+}
+::selection { background: var(--primary); color: var(--on-primary); }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+
+/* Typography */
+.h-mega { font-family: var(--font-display); font-weight: 900; font-size: clamp(56px, 9vw, 144px); line-height: 0.92; letter-spacing: -0.045em; text-wrap: balance; margin: 0; }
+.h-xl   { font-family: var(--font-display); font-weight: 800; font-size: clamp(40px, 5.6vw, 80px); line-height: 0.98; letter-spacing: -0.035em; text-wrap: balance; margin: 0; }
+.h-lg   { font-family: var(--font-display); font-weight: 800; font-size: clamp(28px, 3.2vw, 44px); line-height: 1.05; letter-spacing: -0.028em; margin: 0; }
+.h-md   { font-family: var(--font-display); font-weight: 700; font-size: clamp(22px, 2.2vw, 28px); line-height: 1.15; letter-spacing: -0.02em; margin: 0; }
+
+.eyebrow { font-family: var(--font-body); font-size: 11px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--ink-3); }
+.eyebrow.brand { color: var(--primary); }
+.brand { text-transform: lowercase; }
+
+/* Container & sections */
+.container { max-width: var(--container); margin: 0 auto; padding: 0 var(--gutter); }
+section { padding: 120px 0; position: relative; }
+@media (max-width: 768px) { section { padding: 80px 0; } }
+
+/* Buttons */
+.btn {
+  display: inline-flex; align-items: center; gap: 10px;
+  height: 56px; padding: 0 28px;
+  border-radius: var(--r-pill);
+  font-family: var(--font-body); font-weight: 600; font-size: 15px;
+  letter-spacing: -0.005em;
+  transition: transform var(--fast) var(--ease-court), background var(--fast), color var(--fast), border-color var(--fast);
+  white-space: nowrap;
+}
+.btn-primary { background: var(--primary); color: var(--on-primary); }
+.btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+.btn-primary:active { background: var(--primary-press); transform: translateY(0); }
+.btn-ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--line-2); }
+.btn-ghost:hover { border-color: var(--ink); transform: translateY(-2px); }
+.btn-sm { height: 44px; padding: 0 20px; font-size: 14px; }
+.btn .arrow { width: 18px; height: 18px; transition: transform var(--fast) var(--ease-court); }
+.btn:hover .arrow { transform: translateX(3px); }
+
+/* Nav */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(10, 17, 25, 0.72);
+  backdrop-filter: blur(20px) saturate(140%);
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  border-bottom: 1px solid var(--line);
+}
+.nav-inner {
+  max-width: var(--container); margin: 0 auto;
+  padding: 18px var(--gutter);
+  display: flex; align-items: center; justify-content: space-between; gap: 24px;
+}
+.logo {
+  font-family: var(--font-display); font-weight: 800; font-size: 22px;
+  letter-spacing: -0.04em;
+  display: flex; align-items: center; gap: 10px;
+  text-transform: lowercase;
+}
+.logo-dot { width: 12px; height: 12px; border-radius: 999px; background: var(--primary); box-shadow: 0 0 16px rgba(216, 255, 61, 0.6); }
+.nav-links { display: flex; gap: 32px; list-style: none; margin: 0; padding: 0; }
+.nav-links a { font-size: 14px; font-weight: 500; color: var(--primary-hover); transition: color var(--fast); }
+.nav-links a:hover { color: var(--primary); }
+@media (max-width: 880px) { .nav-links { display: none; } }
+
+/* HERO */
+.hero { padding: 80px 0 100px; position: relative; overflow: hidden; }
+.hero::before {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(900px 600px at 90% -10%, rgba(216, 255, 61, 0.10), transparent 60%),
+    radial-gradient(700px 500px at -10% 110%, rgba(212, 93, 46, 0.08), transparent 60%);
+  pointer-events: none;
+}
+.hero-grid { display: grid; grid-template-columns: 1.4fr 1fr; gap: 64px; align-items: center; position: relative; }
+@media (max-width: 980px) { .hero-grid { grid-template-columns: 1fr; gap: 48px; } }
+
+.hero-eyebrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  padding: 8px 14px;
+  border-radius: var(--r-pill);
+  background: var(--primary-pale);
+  border: 1px solid var(--line-brand);
+  color: var(--primary);
+  font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  margin-bottom: 28px;
+}
+.hero-eyebrow .pulse {
+  width: 8px; height: 8px; border-radius: 999px;
+  background: var(--primary); box-shadow: 0 0 10px var(--primary);
+  animation: pulse 2s var(--ease-court) infinite;
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+}
+.hero h1 .accent { color: var(--primary); font-style: italic; }
+.hero-sub { margin-top: 28px; font-size: 19px; line-height: 1.55; color: var(--ink-2); max-width: 580px; }
+.hero-cta { margin-top: 40px; display: flex; flex-wrap: wrap; gap: 14px; }
+
+.hero-stats {
+  margin-top: 56px; display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px;
+  padding-top: 32px; border-top: 1px solid var(--line); max-width: 580px;
+}
+.hero-stat .n {
+  font-family: var(--font-display); font-weight: 900;
+  font-size: clamp(32px, 3.5vw, 44px); letter-spacing: -0.04em;
+  line-height: 0.9; color: var(--ink); font-variant-numeric: tabular-nums;
+}
+.hero-stat .n sup { font-size: 0.55em; color: var(--primary); margin-left: 4px; }
+.hero-stat .l { margin-top: 8px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+
+/* Hero visual — NTRP ladder */
+.hero-visual {
+  position: relative; aspect-ratio: 4 / 5;
+  border-radius: var(--r-block);
+  background: linear-gradient(160deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid var(--line);
+  padding: 40px; overflow: hidden;
+}
+.hero-visual::after {
+  content: ""; position: absolute;
+  inset: auto -20% -30% auto;
+  width: 360px; height: 360px;
+  border-radius: 999px;
+  background: radial-gradient(circle, rgba(216, 255, 61, 0.35) 0%, transparent 65%);
+  filter: blur(20px);
+}
+.ladder-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 28px; }
+.ladder { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; }
+.ladder-row { display: flex; align-items: baseline; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.ladder-row:last-child { border-bottom: none; }
+.ladder-row .lr-rate { font-family: var(--font-display); font-weight: 900; font-size: 32px; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: var(--ink-3); transition: color var(--base) var(--ease-court); }
+.ladder-row .lr-label { font-size: 13px; font-weight: 500; color: var(--ink-3); }
+.ladder-row.target .lr-rate { color: var(--primary); font-size: 56px; text-shadow: 0 0 24px rgba(216, 255, 61, 0.4); }
+.ladder-row.target .lr-label { color: var(--ink); font-weight: 600; }
+.ladder-row.start .lr-rate { color: var(--ink-2); }
+.ladder-row.start .lr-label { color: var(--ink-2); font-weight: 600; }
+.ladder-arrow {
+  position: absolute; top: 50%; right: 36px; transform: translateY(-50%);
+  width: 2px; height: 60%;
+  background: linear-gradient(180deg, transparent, var(--primary), transparent);
+  opacity: 0.4;
+}
+@media (max-width: 980px) { .hero-visual { aspect-ratio: auto; min-height: 460px; } }
+
+/* ABOUT */
+.about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: start; }
+@media (max-width: 980px) { .about-grid { grid-template-columns: 1fr; gap: 40px; } }
+.about h2 { margin-top: 16px; }
+.about-text { margin-top: 32px; display: flex; flex-direction: column; gap: 18px; font-size: 17px; line-height: 1.65; color: var(--ink-2); }
+.about-text strong { color: var(--ink); font-weight: 600; }
+.about-numbers {
+  display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px;
+  background: var(--line);
+  border-radius: var(--r-block);
+  overflow: hidden;
+  border: 1px solid var(--line);
+}
+.about-num { padding: 36px 28px; background: var(--bg-2); display: flex; flex-direction: column; gap: 12px; }
+.about-num .n { font-family: var(--font-display); font-weight: 900; font-size: clamp(40px, 5vw, 64px); letter-spacing: -0.04em; line-height: 0.9; color: var(--ink); font-variant-numeric: tabular-nums; }
+.about-num.brand .n { color: var(--primary); }
+.about-num .l { font-size: 13px; color: var(--ink-2); line-height: 1.45; max-width: 220px; }
+@media (max-width: 540px) { .about-numbers { grid-template-columns: 1fr; } }
+
+/* PROGRAMS */
+.programs-head { display: flex; align-items: end; justify-content: space-between; gap: 32px; margin-bottom: 56px; flex-wrap: wrap; }
+.programs-head .lead { max-width: 540px; color: var(--ink-2); font-size: 18px; line-height: 1.55; }
+.programs-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px; }
+@media (max-width: 900px) { .programs-grid { grid-template-columns: 1fr; } }
+
+.prog-card {
+  background: var(--bg-2); border: 1px solid var(--line);
+  border-radius: var(--r-block); padding: 40px;
+  display: flex; flex-direction: column; gap: 24px;
+  position: relative; overflow: hidden;
+  transition: transform var(--base) var(--ease-court), border-color var(--base) var(--ease-court);
+}
+.prog-card:hover { transform: translateY(-4px); border-color: var(--line-brand); }
+.prog-card::before {
+  content: ""; position: absolute; inset: -1px;
+  border-radius: var(--r-block); padding: 1px;
+  background: linear-gradient(135deg, rgba(216, 255, 61, 0.25), transparent 60%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor; mask-composite: exclude;
+  opacity: 0; transition: opacity var(--base) var(--ease-court);
+  pointer-events: none;
+}
+.prog-card:hover::before { opacity: 1; }
+.prog-head { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; }
+.prog-title { font-family: var(--font-display); font-weight: 800; font-size: 40px; letter-spacing: -0.035em; line-height: 1; margin: 0; }
+.prog-age { font-size: 12px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-3); padding: 6px 12px; border: 1px solid var(--line-2); border-radius: var(--r-pill); }
+.prog-desc { color: var(--ink-2); font-size: 15px; line-height: 1.55; margin: 0; }
+.prog-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+.prog-list li { display: flex; gap: 12px; font-size: 14px; color: var(--ink); line-height: 1.5; }
+.prog-list li::before { content: ""; flex-shrink: 0; width: 6px; height: 6px; margin-top: 8px; border-radius: 999px; background: var(--primary); }
+.prog-cta { margin-top: auto; padding-top: 12px; }
+
+.prog-feature {
+  background: linear-gradient(135deg, var(--primary) 0%, #b8e030 100%);
+  color: var(--on-primary);
+  grid-column: span 2;
+  display: grid; grid-template-columns: 1.4fr 1fr; align-items: center; gap: 32px;
+  padding: 48px;
+}
+.prog-feature::before { display: none; }
+.prog-feature:hover { border-color: transparent; }
+.prog-feature .prog-title { color: var(--on-primary); font-size: 56px; }
+.prog-feature .feat-text { color: var(--on-primary); font-size: 17px; line-height: 1.5; opacity: 0.85; }
+.prog-feature .feat-cta { background: var(--on-primary); color: var(--primary); }
+.prog-feature .feat-cta:hover { background: #1a2e44; }
+@media (max-width: 900px) {
+  .prog-feature { grid-template-columns: 1fr; grid-column: span 1; padding: 36px; }
+  .prog-feature .prog-title { font-size: 40px; }
+}
+
+/* PORTFOLIO */
+.portfolio-head { text-align: center; margin-bottom: 56px; }
+.portfolio-head .eyebrow { display: block; margin-bottom: 20px; }
+.portfolio-head h2 { margin: 0 auto; }
+.portfolio-head .sub { margin: 24px auto 0; max-width: 560px; color: var(--ink-2); font-size: 18px; line-height: 1.55; }
+.portfolio-grid { display: grid; grid-template-columns: repeat(12, 1fr); gap: 16px; }
+.case { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r-card); overflow: hidden; position: relative; cursor: pointer; transition: transform var(--base) var(--ease-court); }
+.case:hover { transform: translateY(-4px); }
+.case:hover .case-overlay { opacity: 1; }
+.case-1 { grid-column: span 7; aspect-ratio: 16 / 10; }
+.case-2 { grid-column: span 5; aspect-ratio: 4 / 5; }
+.case-3 { grid-column: span 5; aspect-ratio: 4 / 5; }
+.case-4 { grid-column: span 7; aspect-ratio: 16 / 10; }
+@media (max-width: 900px) {
+  .case-1, .case-2, .case-3, .case-4 { grid-column: span 12; aspect-ratio: 4 / 3; }
+}
+.case-media { position: absolute; inset: 0; display: grid; place-items: center; background: linear-gradient(135deg, var(--bg-3) 0%, var(--bg-2) 100%); }
+.case-media::after {
+  content: ""; position: absolute; inset: 0;
+  background:
+    radial-gradient(circle at 30% 30%, rgba(216, 255, 61, 0.06), transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(212, 93, 46, 0.05), transparent 50%);
+}
+.case-icon { width: 64px; height: 64px; border-radius: 999px; background: rgba(216, 255, 61, 0.15); border: 1px solid var(--line-brand); display: grid; place-items: center; position: relative; z-index: 1; }
+.case-icon svg { width: 24px; height: 24px; color: var(--primary); }
+.case-overlay {
+  position: absolute; inset: 0; padding: 28px;
+  display: flex; flex-direction: column; justify-content: flex-end;
+  background: linear-gradient(180deg, transparent 40%, rgba(10, 17, 25, 0.92) 100%);
+  opacity: 0; transition: opacity var(--base) var(--ease-court);
+}
+.case-overlay .case-tag { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--primary); margin-bottom: 10px; }
+.case-overlay .case-title { font-family: var(--font-display); font-weight: 700; font-size: 22px; letter-spacing: -0.02em; line-height: 1.1; }
+.case-static-label { position: absolute; bottom: 20px; left: 24px; font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); z-index: 1; }
+.portfolio-cta { margin-top: 48px; text-align: center; }
+
+/* TESTIMONIAL */
+.testimonial { padding: 100px 0; }
+.testimonial-band {
+  background: linear-gradient(160deg, var(--bg-3) 0%, var(--bg-2) 100%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-block);
+  padding: 72px 64px;
+  display: grid; grid-template-columns: 1.6fr 1fr; gap: 56px; align-items: center;
+  position: relative; overflow: hidden;
+}
+.testimonial-band::after {
+  content: ""; position: absolute; top: -120px; right: -120px;
+  width: 360px; height: 360px; border-radius: 999px;
+  background: radial-gradient(circle, rgba(216, 255, 61, 0.18), transparent 70%);
+  filter: blur(40px);
+}
+.testimonial-quote { font-family: var(--font-display); font-weight: 800; font-size: clamp(24px, 2.6vw, 36px); letter-spacing: -0.02em; line-height: 1.18; color: var(--ink); margin: 24px 0 0; position: relative; z-index: 1; text-wrap: balance; }
+.testimonial-attr { margin-top: 32px; display: flex; align-items: center; gap: 16px; position: relative; z-index: 1; }
+.test-avatar { width: 56px; height: 56px; border-radius: 999px; background: var(--primary-pale); border: 1px solid var(--line-brand); display: grid; place-items: center; color: var(--primary); font-family: var(--font-display); font-weight: 800; font-size: 16px; }
+.test-name { font-size: 15px; font-weight: 600; color: var(--ink); }
+.test-meta { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+.testimonial-stats { display: flex; flex-direction: column; gap: 24px; position: relative; z-index: 1; }
+.test-stat { display: flex; flex-direction: column; gap: 6px; }
+.test-stat .n { font-family: var(--font-display); font-weight: 900; font-size: 56px; line-height: 0.88; letter-spacing: -0.04em; color: var(--primary); font-variant-numeric: tabular-nums; }
+.test-stat .l { font-size: 12px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--ink-3); }
+@media (max-width: 900px) {
+  .testimonial-band { grid-template-columns: 1fr; padding: 48px 32px; gap: 40px; }
+  .testimonial-stats { flex-direction: row; flex-wrap: wrap; gap: 32px; }
+  .test-stat .n { font-size: 40px; }
+}
+
+/* CONTACT */
+.contact { padding: 120px 0; }
+.contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+@media (max-width: 900px) { .contact-grid { grid-template-columns: 1fr; gap: 40px; } }
+.contact-info h2 { margin-bottom: 24px; }
+.contact-info .lead { color: var(--ink-2); font-size: 18px; line-height: 1.55; margin-bottom: 36px; }
+.contact-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 16px; }
+.contact-list li { display: flex; gap: 16px; align-items: start; padding: 16px 0; border-bottom: 1px solid var(--line); }
+.contact-list li:last-child { border-bottom: none; }
+.ci-num { font-family: var(--font-display); font-weight: 800; font-size: 14px; color: var(--primary); letter-spacing: -0.02em; width: 24px; flex-shrink: 0; }
+.ci-body { font-size: 15px; line-height: 1.55; color: var(--ink); }
+.ci-body strong { display: block; font-weight: 600; margin-bottom: 2px; }
+.ci-body span { color: var(--ink-2); font-size: 14px; }
+.form-card { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r-block); padding: 40px; }
+.form-card h3 { font-family: var(--font-display); font-weight: 700; font-size: 24px; letter-spacing: -0.02em; margin: 0 0 24px; }
+.form-row { display: flex; flex-direction: column; gap: 8px; margin-bottom: 18px; }
+.form-row label { font-size: 12px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
+.form-row input, .form-row select, .form-row textarea {
+  font-family: inherit; font-size: 15px; color: var(--ink);
+  background: var(--bg-3); border: 1px solid var(--line-2);
+  border-radius: var(--r-input); padding: 14px 16px;
+  transition: border-color var(--fast) var(--ease-court), background var(--fast);
+  width: 100%;
+}
+.form-row input::placeholder, .form-row textarea::placeholder { color: var(--ink-disabled); }
+.form-row input:focus, .form-row select:focus, .form-row textarea:focus { outline: none; border-color: var(--primary); background: var(--bg-4); }
+.form-row textarea { resize: vertical; min-height: 100px; }
+.form-card button[type="submit"] { width: 100%; justify-content: center; margin-top: 8px; }
+.form-note { margin-top: 14px; font-size: 12px; color: var(--ink-3); line-height: 1.5; text-align: center; }
+
+/* SOCIAL */
+.social { padding: 100px 0; background: var(--bg-2); border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.social-head { text-align: center; margin-bottom: 56px; }
+.social-head h2 { margin: 12px 0 0; }
+.social-head .sub { margin-top: 16px; color: var(--ink-2); font-size: 17px; }
+.social-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+@media (max-width: 900px) { .social-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 540px) { .social-grid { grid-template-columns: 1fr; } }
+.social-card {
+  display: flex; flex-direction: column; justify-content: space-between; gap: 32px;
+  padding: 28px;
+  background: var(--bg-3); border: 1px solid var(--line);
+  border-radius: var(--r-card); min-height: 180px;
+  transition: transform var(--base) var(--ease-court), border-color var(--base) var(--ease-court), background var(--base);
+  position: relative; overflow: hidden;
+}
+.social-card:hover { transform: translateY(-4px); border-color: var(--line-brand); background: var(--bg-4); }
+.social-card .platform { font-family: var(--font-display); font-weight: 700; font-size: 20px; letter-spacing: -0.02em; }
+.social-card .handle { font-size: 14px; color: var(--ink-2); margin-top: 4px; }
+.social-card .arrow-btn {
+  width: 40px; height: 40px; border-radius: 999px;
+  background: var(--bg-2); border: 1px solid var(--line-2);
+  display: grid; place-items: center; align-self: flex-end;
+  transition: transform var(--fast) var(--ease-court), background var(--fast);
+}
+.social-card:hover .arrow-btn { background: var(--primary); border-color: var(--primary); transform: rotate(-45deg); }
+.social-card:hover .arrow-btn svg { color: var(--on-primary); }
+.social-card .arrow-btn svg { width: 16px; height: 16px; color: var(--ink); transition: color var(--fast); }
+
+/* FOOTER */
+footer { padding: 80px 0 40px; background: var(--bg); }
+.foot-grid { display: grid; grid-template-columns: 1.5fr 1fr 1fr; gap: 48px; padding-bottom: 48px; border-bottom: 1px solid var(--line); }
+@media (max-width: 700px) { .foot-grid { grid-template-columns: 1fr; gap: 32px; } }
+.foot-brand .logo { margin-bottom: 16px; }
+.foot-brand p { color: var(--ink-2); font-size: 15px; line-height: 1.55; max-width: 360px; }
+.foot-col h4 { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin: 0 0 16px; }
+.foot-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
+.foot-col a { color: var(--ink-2); font-size: 14px; transition: color var(--fast); }
+.foot-col a:hover { color: var(--primary); }
+.foot-bottom { padding-top: 32px; display: flex; justify-content: space-between; gap: 24px; flex-wrap: wrap; font-size: 12px; color: var(--ink-3); letter-spacing: 0.04em; }
+
+/* Scroll reveal */
+.reveal { opacity: 0; transform: translateY(28px); transition: opacity 0.85s var(--ease-court), transform 0.85s var(--ease-court); }
+.reveal.in { opacity: 1; transform: translateY(0); }
+.reveal[data-delay="1"] { transition-delay: 0.08s; }
+.reveal[data-delay="2"] { transition-delay: 0.16s; }
+.reveal[data-delay="3"] { transition-delay: 0.24s; }
+.reveal[data-delay="4"] { transition-delay: 0.32s; }
+.reveal[data-delay="5"] { transition-delay: 0.40s; }
+.reveal[data-delay="6"] { transition-delay: 0.48s; }
+@media (prefers-reduced-motion: reduce) {
+  .reveal { opacity: 1; transform: none; transition: none; }
+  * { animation: none !important; }
+}
+</style>
+</head>
+<body>
+
+<!-- ===== NAV ===== -->
+<nav class="nav" data-screen-label="00 Navigation">
+  <div class="nav-inner">
+    <a href="#hero" class="logo">
+      <span class="logo-dot"></span>
+      <span class="brand">tenssense</span>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#about">Подход</a></li>
+      <li><a href="#programs">Программы</a></li>
+      <li><a href="#portfolio">Ученики</a></li>
+      <li><a href="#contact">Записаться</a></li>
+      <li><a href="#social">Соцсети</a></li>
+    </ul>
+    <a href="#contact" class="btn btn-primary btn-sm">
+      Записаться
+      <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+    </a>
+  </div>
+</nav>
+
+<!-- ===== HERO ===== -->
+<section class="hero" id="hero" data-screen-label="01 Hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="hero-eyebrow reveal"><span class="pulse"></span> Набор учеников · сезон 2026</div>
+        <h1 class="h-mega reveal" data-delay="1">
+          От нуля до <span class="accent">5.0&nbsp;NTRP</span> за три года.
+        </h1>
+        <p class="hero-sub reveal" data-delay="2">
+          Система обучения теннису для взрослых и детей с максимальным КПД!
+        </p>
+        <div class="hero-cta reveal" data-delay="3">
+          <a href="#contact" class="btn btn-primary">
+            Записаться на программу
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+          <a href="#programs" class="btn btn-ghost">Смотреть программы</a>
+        </div>
+        <div class="hero-stats reveal" data-delay="4">
+          <div class="hero-stat">
+            <div class="n">3<sup>года</sup></div>
+            <div class="l">До рейтинга 5.0</div>
+          </div>
+          <div class="hero-stat">
+            <div class="n">7</div>
+            <div class="l">Модулей</div>
+          </div>
+          <div class="hero-stat">
+            <div class="n">∞</div>
+            <div class="l">Онлайн + офлайн</div>
+          </div>
+        </div>
+      </div>
+      <div class="hero-visual reveal" data-delay="2">
+        <div class="ladder-eyebrow">Шкала NTRP</div>
+        <div class="ladder">
+          <div class="ladder-row start">
+            <span class="lr-rate">0.0</span>
+            <span class="lr-label">стартуем</span>
+          </div>
+          <div class="ladder-row">
+            <span class="lr-rate">1.5</span>
+            <span class="lr-label">осваиваем</span>
+          </div>
+          <div class="ladder-row">
+            <span class="lr-rate">2.5</span>
+            <span class="lr-label">держим мяч</span>
+          </div>
+          <div class="ladder-row">
+            <span class="lr-rate">3.5</span>
+            <span class="lr-label">понимаем все</span>
+          </div>
+          <div class="ladder-row target">
+            <span class="lr-rate">5.0</span>
+            <span class="lr-label">умеем</span>
+          </div>
+        </div>
+        <div class="ladder-arrow"></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT — подход ===== -->
+<section class="about" id="about" data-screen-label="02 About / Подход">
+  <div class="container">
+    <div class="about-grid">
+      <div>
+        <div class="eyebrow brand reveal">Философия 10ssensey:</div>
+        <h2 class="h-xl reveal" data-delay="1">У&nbsp;меня нет клиентов. Есть только&nbsp;ученики.</h2>
+        <div class="about-text reveal" data-delay="2">
+          <p>Ко мне идут за техникой и <strong>результатами</strong>. Не «тренироваться» — а поставить движение так, чтобы каждый удар был управляемым.</p>
+          <p>Базовую работу мы проделываем <strong>в онлайн</strong>: формируем правильные паттерны, создаем техническую лексику. Когда движение освоено — мы выходим на корт. И тогда каждая минута работает на нас.</p>
+          <p>Ограниченное количество учеников. Только годовые циклы программ.</p>
+        </div>
+      </div>
+      <div class="about-numbers reveal" data-delay="3">
+        <div class="about-num brand">
+          <div class="n">5.0</div>
+          <div class="l">NTRP — целевой рейтинг программы</div>
+        </div>
+        <div class="about-num">
+          <div class="n">7</div>
+          <div class="l">Модулей за 3 года</div>
+        </div>
+        <div class="about-num">
+          <div class="n">30+</div>
+          <div class="l">Учеников в телеграм канале уже начали</div>
+        </div>
+        <div class="about-num">
+          <div class="n">2×</div>
+          <div class="l">Формата работы: онлайн + офлайн</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== PROGRAMS ===== -->
+<section class="programs" id="programs" data-screen-label="03 Programs / Программы">
+  <div class="container">
+    <div class="programs-head">
+      <div>
+        <div class="eyebrow brand reveal">Программы</div>
+        <h2 class="h-xl reveal" data-delay="1">Персональное ведение.</h2>
+      </div>
+      <p class="lead reveal" data-delay="2">Три трека и одна система. Выбери свой формат — взрослый с нуля, ребёнок, спортсмен.</p>
+    </div>
+    <div class="programs-grid">
+
+      <article class="prog-card reveal" data-delay="1">
+        <div class="prog-head">
+          <h3 class="prog-title">Amateur</h3>
+          <span class="prog-age">Взрослые · с&nbsp;0</span>
+        </div>
+        <p class="prog-desc">Взрослый любитель с нуля. Ставим технику с самого первого движения.</p>
+        <ul class="prog-list">
+          <li>Постановка техники</li>
+          <li>Индивидуальный подход</li>
+          <li>Понятные домашние задания</li>
+          <li>Для любого возраста</li>
+        </ul>
+        <div class="prog-cta">
+          <a href="https://t.me/m/hSc8BrNUZjYy" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">
+            Записаться
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="prog-card reveal" data-delay="2">
+        <div class="prog-head">
+          <h3 class="prog-title">Kinder</h3>
+          <span class="prog-age">Дети · 8–12</span>
+        </div>
+        <p class="prog-desc">Дети 8–12 лет. Закладываем правильные движение, крепкий фундамент.</p>
+        <ul class="prog-list">
+          <li>Ведение по методике 10s</li>
+          <li>Формирование атлетических качеств</li>
+          <li>Подготовка к турнирам</li>
+          <li>Все упражнения в игровой форме</li>
+        </ul>
+        <div class="prog-cta">
+          <a href="https://t.me/m/DsDCLnZ5NGYy" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">
+            Записаться
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="prog-card reveal" data-delay="3">
+        <div class="prog-head">
+          <h3 class="prog-title">Pro</h3>
+          <span class="prog-age">12+ · спорт</span>
+        </div>
+        <p class="prog-desc">Для тех, кто уже играет и хочет довести технику до совершенства.</p>
+        <ul class="prog-list">
+          <li>Улучшение техники</li>
+          <li>СФП и ОФП</li>
+          <li>Ведение по турнирам</li>
+          <li>Контроль самостоятельных работ</li>
+        </ul>
+        <div class="prog-cta">
+          <a href="https://t.me/m/eC7hBEnJZDEy" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">
+            Записаться
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+      <article class="prog-card prog-feature reveal" data-delay="4">
+        <div>
+          <div style="font-size:11px;font-weight:700;letter-spacing:0.16em;text-transform:uppercase;margin-bottom:14px;opacity:0.7;">Открытый канал</div>
+          <h3 class="prog-title">Техника с&nbsp;нуля</h3>
+          <p class="feat-text" style="margin-top:14px;max-width:440px;">Telegram-канал с упражнениями для постановки техники. Бесплатно, регулярно, без воды.</p>
+        </div>
+        <div style="display:flex;justify-content:flex-end;">
+          <a href="https://t.me/+RkpBRJ5cpbEwZWMy" target="_blank" rel="noopener" class="btn feat-cta">
+            Подписаться
+            <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+          </a>
+        </div>
+      </article>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===== PORTFOLIO ===== -->
+<section class="portfolio" id="portfolio" data-screen-label="04 Portfolio / Ученики">
+  <div class="container">
+    <div class="portfolio-head">
+      <div class="eyebrow brand reveal">Ученики</div>
+      <h2 class="h-xl reveal" data-delay="1">Прогресс на корте — на&nbsp;видео.</h2>
+      <p class="sub reveal" data-delay="2">Стараюсь снимать всегда на видео весь процесс и выкладывать некоторые из них, в качестве примера и сравнения «было/стало».</p>
+    </div>
+    <div class="portfolio-grid">
+
+      <div class="case case-1 reveal" data-delay="1">
+        <div class="case-media">
+          <div class="case-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="case-static-label">Кейс 01</div>
+        <div class="case-overlay">
+          <div class="case-tag">Amateur · 14 месяцев</div>
+          <div class="case-title">От первого касания до любительского турнира</div>
+        </div>
+      </div>
+
+      <div class="case case-2 reveal" data-delay="2">
+        <div class="case-media">
+          <div class="case-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="case-static-label">Кейс 02</div>
+        <div class="case-overlay">
+          <div class="case-tag">Kinder · 9 лет</div>
+          <div class="case-title">Постановка техники с детства</div>
+        </div>
+      </div>
+
+      <div class="case case-3 reveal" data-delay="3">
+        <div class="case-media">
+          <div class="case-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="case-static-label">Кейс 03</div>
+        <div class="case-overlay">
+          <div class="case-tag">Pro · 2 года</div>
+          <div class="case-title">Переход на турнирный уровень</div>
+        </div>
+      </div>
+
+      <div class="case case-4 reveal" data-delay="4">
+        <div class="case-media">
+          <div class="case-icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"></polygon></svg>
+          </div>
+        </div>
+        <div class="case-static-label">Кейс 04</div>
+        <div class="case-overlay">
+          <div class="case-tag">Поездки на ATP и WTA турниры</div>
+          <div class="case-title">Учимся смотря на настоящий живой теннис</div>
+        </div>
+      </div>
+
+    </div>
+    <div class="portfolio-cta reveal" data-delay="2">
+      <a href="https://www.youtube.com/@tenssense" target="_blank" rel="noopener" class="btn btn-ghost">
+        Смотреть все на YouTube
+        <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== TESTIMONIAL ===== -->
+<section class="testimonial" data-screen-label="05 Testimonial">
+  <div class="container">
+    <div class="testimonial-band reveal">
+      <div>
+        <div class="eyebrow brand">История · Ольга, 34</div>
+        <blockquote class="testimonial-quote">
+          «Через год я обыграла мужа. Через два — выиграла любительский турнир. Это не магия — это расписание, тренер и минутное видео с кровати три раза в неделю))).»
+        </blockquote>
+        <div class="testimonial-attr">
+          <div class="test-avatar">ОЛ</div>
+          <div>
+            <div class="test-name">Ольга Левина</div>
+            <div class="test-meta">Москва · взрослый трек · NTRP 0.0 → 3.5 за 14 месяцев</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial-stats">
+        <div class="test-stat">
+          <div class="n">+3.5</div>
+          <div class="l">NTRP за 14 месяцев</div>
+        </div>
+        <div class="test-stat">
+          <div class="n">168</div>
+          <div class="l">итераций</div>
+        </div>
+        <div class="test-stat">
+          <div class="n">1</div>
+          <div class="l">любительский титул</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== CONTACT / FORM ===== -->
+<section class="contact" id="contact" data-screen-label="06 Contact / Заявка">
+  <div class="container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <div class="eyebrow brand reveal">Заявка</div>
+        <h2 class="h-xl reveal" data-delay="1">Запишись на&nbsp;консультацию.</h2>
+        <p class="lead reveal" data-delay="2">Я отвечу лично, разберём твой текущий уровень, цели и подберём программу. Никакого скрипта — обычный разговор.</p>
+        <ul class="contact-list reveal" data-delay="3">
+          <li>
+            <span class="ci-num">01</span>
+            <div class="ci-body">
+              <strong>Определение текущей точки</strong>
+              <span>Смотрим короткое видео твоей игры или начинаем с нуля.</span>
+            </div>
+          </li>
+          <li>
+            <span class="ci-num">02</span>
+            <div class="ci-body">
+              <strong>Подбор программы</strong>
+              <span>Amateur, Kinder или Pro — какой формат, какой темп, какой результат.</span>
+            </div>
+          </li>
+          <li>
+            <span class="ci-num">03</span>
+            <div class="ci-body">
+              <strong>План на 4 недели</strong>
+              <span>Первый блок упражнений с домашними заданиями и обратной связью.</span>
+            </div>
+          </li>
+          <li>
+            <span class="ci-num">04</span>
+            <div class="ci-body">
+              <strong>Старт работы</strong>
+              <span>Сначала постановка техники в онлайн и после — встреча на корте.</span>
+            </div>
+          </li>
+        </ul>
+      </div>
+      <form class="form-card reveal" data-delay="2" onsubmit="event.preventDefault(); const b=this.querySelector('button[type=submit]'); b.textContent='Отправлено · спасибо'; b.disabled=true;">
+        <h3>Оставь заявку</h3>
+        <div class="form-row">
+          <label for="name">Имя</label>
+          <input type="text" id="name" name="name" placeholder="Как тебя зовут" required>
+        </div>
+        <div class="form-row">
+          <label for="contact">Телефон или Telegram</label>
+          <input type="text" id="contact" name="contact" placeholder="+7… или @username" required>
+        </div>
+        <div class="form-row">
+          <label for="track">Какая программа интересует</label>
+          <select id="track" name="track">
+            <option>Amateur — взрослый с нуля</option>
+            <option>Kinder — дети 8–12</option>
+            <option>Pro — спортивный трек</option>
+            <option>Пока не знаю — нужна консультация</option>
+          </select>
+        </div>
+        <div class="form-row">
+          <label for="message">Коротко о себе</label>
+          <textarea id="message" name="message" placeholder="Опыт, цели, удобный формат…"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary">
+          Отправить заявку
+          <svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+        <p class="form-note">Отправляя форму, ты соглашаешься на обработку данных. Я отвечу в течение суток.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SOCIAL ===== -->
+<section class="social" id="social" data-screen-label="07 Social / Соцсети">
+  <div class="container">
+    <div class="social-head">
+      <div class="eyebrow brand reveal">Соцсети</div>
+      <h2 class="h-xl reveal" data-delay="1">Занимайся сам, но под моим контролем.</h2>
+      <p class="sub reveal" data-delay="2">Каждую неделю — упражнения, разборы и кейсы учеников.</p>
+    </div>
+    <div class="social-grid">
+      <a href="https://www.youtube.com/@tenssense" target="_blank" rel="noopener" class="social-card reveal" data-delay="1">
+        <div>
+          <div class="platform">YouTube</div>
+          <div class="handle">@tenssense</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:12px;">Длинные разборы и кейсы</div>
+        </div>
+        <div class="arrow-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
+      <a href="https://www.instagram.com/10ssensey" target="_blank" rel="noopener" class="social-card reveal" data-delay="2">
+        <div>
+          <div class="platform">Instagram</div>
+          <div class="handle">@10ssensey</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:12px;">Короткие упражнения и reels</div>
+        </div>
+        <div class="arrow-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
+      <a href="https://vk.com/tenssense" target="_blank" rel="noopener" class="social-card reveal" data-delay="3">
+        <div>
+          <div class="platform">ВКонтакте</div>
+          <div class="handle">vk.com/tenssense</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:12px;">Сообщество и анонсы</div>
+        </div>
+        <div class="arrow-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
+      <a href="https://rutube.ru/channel/70040693/" target="_blank" rel="noopener" class="social-card reveal" data-delay="4">
+        <div>
+          <div class="platform">Rutube</div>
+          <div class="handle">channel/70040693</div>
+          <div style="font-size:13px;color:var(--ink-3);margin-top:12px;">Все видео-разборы</div>
+        </div>
+        <div class="arrow-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer data-screen-label="08 Footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <div class="logo">
+          <span class="logo-dot"></span>
+          <span class="brand">tenssense</span>
+        </div>
+        <p>Система обучения теннису для взрослых и детей. От нуля до 5.0 NTRP за три года.</p>
+      </div>
+      <div class="foot-col">
+        <h4>Программы</h4>
+        <ul>
+          <li><a href="#programs">Amateur</a></li>
+          <li><a href="#programs">Kinder</a></li>
+          <li><a href="#programs">Pro</a></li>
+          <li><a href="https://t.me/+RkpBRJ5cpbEwZWMy" target="_blank" rel="noopener">Техника с нуля</a></li>
+        </ul>
+      </div>
+      <div class="foot-col">
+        <h4>Связь</h4>
+        <ul>
+          <li><a href="https://t.me/m/hSc8BrNUZjYy" target="_blank" rel="noopener">Telegram</a></li>
+          <li><a href="https://www.instagram.com/10ssensey" target="_blank" rel="noopener">Instagram</a></li>
+          <li><a href="https://www.youtube.com/@tenssense" target="_blank" rel="noopener">YouTube</a></li>
+          <li><a href="#contact">Оставить заявку</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <div>© 2026 tenssense. Все права защищены.</div>
+      <div>Астана · Москва</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Scroll-reveal observer
+  (function() {
+    const elements = document.querySelectorAll('.reveal');
+    if (!('IntersectionObserver' in window)) {
+      elements.forEach(el => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('in');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12, rootMargin: '0px 0px -40px 0px' });
+    elements.forEach(el => io.observe(el));
+  })();
+</script>
+
+</body>
+</html>
