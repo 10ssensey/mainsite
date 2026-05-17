@@ -191,11 +191,15 @@ section { padding: 120px 0; position: relative; }
 
 /* Hero visual — NTRP ladder */
 .hero-visual {
-  position: relative; aspect-ratio: 4 / 5;
+  position: relative;
   border-radius: var(--r-block);
   background: linear-gradient(160deg, var(--bg-3) 0%, var(--bg-2) 100%);
   border: 1px solid var(--line);
-  padding: 40px; overflow: hidden;
+  padding: 36px 40px;
+  overflow: hidden;
+  align-self: stretch;
+  display: flex;
+  flex-direction: column;
 }
 .hero-visual::after {
   content: ""; position: absolute;
@@ -205,13 +209,13 @@ section { padding: 120px 0; position: relative; }
   background: radial-gradient(circle, rgba(216, 255, 61, 0.35) 0%, transparent 65%);
   filter: blur(20px);
 }
-.ladder-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 28px; }
-.ladder { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 10px; }
-.ladder-row { display: flex; align-items: baseline; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.ladder-eyebrow { font-size: 11px; font-weight: 700; letter-spacing: 0.16em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 20px; }
+.ladder { position: relative; z-index: 1; display: flex; flex-direction: column; gap: 4px; flex: 1; justify-content: space-between; }
+.ladder-row { display: flex; align-items: baseline; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
 .ladder-row:last-child { border-bottom: none; }
-.ladder-row .lr-rate { font-family: var(--font-display); font-weight: 900; font-size: 32px; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: var(--ink-3); transition: color var(--base) var(--ease-court); }
+.ladder-row .lr-rate { font-family: var(--font-display); font-weight: 900; font-size: 28px; letter-spacing: -0.04em; font-variant-numeric: tabular-nums; color: var(--ink-3); transition: color var(--base) var(--ease-court); }
 .ladder-row .lr-label { font-size: 13px; font-weight: 500; color: var(--ink-3); }
-.ladder-row.target .lr-rate { color: var(--primary); font-size: 56px; text-shadow: 0 0 24px rgba(216, 255, 61, 0.4); }
+.ladder-row.target .lr-rate { color: var(--primary); font-size: 44px; text-shadow: 0 0 24px rgba(216, 255, 61, 0.4); }
 .ladder-row.target .lr-label { color: var(--ink); font-weight: 600; }
 .ladder-row.start .lr-rate { color: var(--ink-2); }
 .ladder-row.start .lr-label { color: var(--ink-2); font-weight: 600; }
@@ -221,7 +225,7 @@ section { padding: 120px 0; position: relative; }
   background: linear-gradient(180deg, transparent, var(--primary), transparent);
   opacity: 0.4;
 }
-@media (max-width: 980px) { .hero-visual { aspect-ratio: auto; min-height: 460px; } }
+@media (max-width: 980px) { .hero-visual { min-height: 460px; } .ladder-row .lr-rate { font-size: 32px; } .ladder-row.target .lr-rate { font-size: 56px; } }
 
 /* ABOUT */
 .about-grid { display: grid; grid-template-columns: 1fr 1.2fr; gap: 80px; align-items: start; }
