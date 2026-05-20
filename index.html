@@ -1957,16 +1957,13 @@ img, svg, video, iframe { max-width: 100%; height: auto; }
       lastSubmitTime = now;
 
       try {
-        const url = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage';
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            chat_id: TELEGRAM_CHAT_ID,
-            text: tgMessage,
-            parse_mode: 'HTML',
-            disable_web_page_preview: true
-          })
+       const url = 'https://api.telegram.org/bot' + TELEGRAM_BOT_TOKEN + '/sendMessage' +
+          '?chat_id=' + encodeURIComponent(TELEGRAM_CHAT_ID) +
+          '&parse_mode=HTML' +
+          '&disable_web_page_preview=true' +
+          '&text=' + encodeURIComponent(tgMessage);
+
+        const response = await fetch(url, { method: 'GET' });
         });
 
         const result = await response.json();
