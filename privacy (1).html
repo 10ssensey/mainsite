@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Политика конфиденциальности · tenssense</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@400;700;800;900&family=Onest:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --color-primary:     #d8ff3d;
+      --color-on-primary:  #0d1a26;
+      --color-canvas:      #f4f0e8;
+      --color-canvas-strong: #e7e1d4;
+      --color-surface:     #ffffff;
+      --color-stadium:     #0d1a26;
+      --color-stadium-soft:#1a2a3a;
+      --color-ink:         #0d1a26;
+      --color-ink-2:       #3d4a55;
+      --color-ink-3:       #6a7480;
+      --color-clay:        #d45d2e;
+      --color-clay-pale:   #f7e1d4;
+      --color-line:        rgba(13, 26, 38, 0.12);
+      --font-display:      "Unbounded", sans-serif;
+      --font-body:         "Onest", sans-serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--color-canvas);
+      color: var(--color-ink);
+      font-family: var(--font-body);
+      font-size: 16px;
+      line-height: 1.65;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* NAV */
+    .nav {
+      background: var(--color-stadium);
+      padding: 0 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 60px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 18px;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+      text-decoration: none;
+    }
+    .nav-logo span { color: #f4f0e8; }
+    .nav-back {
+      font-family: var(--font-body);
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(244,240,232,0.6);
+      text-decoration: none;
+      letter-spacing: 0.04em;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: #f4f0e8; }
+
+    /* HERO */
+    .hero {
+      background: var(--color-stadium);
+      padding: 72px 24px 64px;
+    }
+    .hero-inner {
+      max-width: 760px;
+      margin: 0 auto;
+    }
+    .eyebrow {
+      font-family: var(--font-body);
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 20px;
+    }
+    .hero h1 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: #f4f0e8;
+      margin-bottom: 20px;
+    }
+    .hero-meta {
+      font-size: 14px;
+      color: rgba(244,240,232,0.5);
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+    .hero-meta span { display: flex; align-items: center; gap: 6px; }
+    .hero-meta .dot {
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary);
+      display: inline-block;
+    }
+
+    /* LAYOUT */
+    .layout {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 64px 24px 96px;
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 56px;
+      align-items: start;
+    }
+
+    /* TOC SIDEBAR */
+    .toc {
+      position: sticky;
+      top: 80px;
+    }
+    .toc-label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--color-ink-3);
+      margin-bottom: 16px;
+    }
+    .toc-list { list-style: none; }
+    .toc-list li { margin-bottom: 2px; }
+    .toc-list a {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--color-ink-3);
+      text-decoration: none;
+      display: block;
+      padding: 6px 12px;
+      border-radius: 8px;
+      border-left: 2px solid transparent;
+      transition: all 0.15s;
+      line-height: 1.4;
+    }
+    .toc-list a:hover {
+      color: var(--color-ink);
+      background: var(--color-canvas-strong);
+      border-left-color: var(--color-primary);
+    }
+
+    /* CONTENT */
+    .content { min-width: 0; }
+
+    .section {
+      background: var(--color-surface);
+      border-radius: 20px;
+      padding: 40px 44px;
+      margin-bottom: 16px;
+    }
+    .section:last-child { margin-bottom: 0; }
+
+    .section-num {
+      font-family: var(--font-display);
+      font-weight: 900;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      color: var(--color-primary);
+      background: var(--color-stadium);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      margin-bottom: 16px;
+    }
+
+    .section h2 {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 18px;
+      letter-spacing: -0.02em;
+      color: var(--color-ink);
+      margin-bottom: 16px;
+      line-height: 1.2;
+    }
+
+    .section p {
+      font-size: 15px;
+      color: var(--color-ink-2);
+      margin-bottom: 12px;
+      line-height: 1.7;
+    }
+    .section p:last-child { margin-bottom: 0; }
+
+    .section ul {
+      list-style: none;
+      margin: 16px 0;
+    }
+    .section ul li {
+      font-size: 15px;
+      color: var(--color-ink-2);
+      padding: 8px 0 8px 20px;
+      border-bottom: 1px solid var(--color-line);
+      position: relative;
+      line-height: 1.6;
+    }
+    .section ul li:last-child { border-bottom: none; }
+    .section ul li::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 17px;
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--color-primary);
+    }
+
+    .section strong {
+      font-weight: 600;
+      color: var(--color-ink);
+    }
+
+    /* Highlight box */
+    .highlight {
+      background: var(--color-clay-pale);
+      border-left: 3px solid var(--color-clay);
+      border-radius: 0 12px 12px 0;
+      padding: 16px 20px;
+      margin: 20px 0;
+    }
+    .highlight p {
+      font-size: 14px;
+      color: #5a3020;
+      margin: 0;
+    }
+
+    /* Contact card */
+    .contact-card {
+      background: var(--color-stadium);
+      border-radius: 16px;
+      padding: 28px 32px;
+      margin-top: 20px;
+    }
+    .contact-card .label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--color-primary);
+      margin-bottom: 12px;
+    }
+    .contact-card a {
+      display: block;
+      font-size: 15px;
+      font-weight: 600;
+      color: #f4f0e8;
+      text-decoration: none;
+      margin-bottom: 6px;
+      transition: color 0.15s;
+    }
+    .contact-card a:hover { color: var(--color-primary); }
+
+    /* FOOTER */
+    footer {
+      background: var(--color-stadium);
+      padding: 40px 24px;
+    }
+    .footer-inner {
+      max-width: 760px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-logo {
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 16px;
+      color: var(--color-primary);
+      letter-spacing: -0.02em;
+    }
+    .footer-links { display: flex; gap: 20px; }
+    .footer-links a {
+      font-size: 13px;
+      color: rgba(244,240,232,0.45);
+      text-decoration: none;
+      transition: color 0.15s;
+    }
+    .footer-links a:hover { color: #f4f0e8; }
+    .footer-copy {
+      font-size: 12px;
+      color: rgba(244,240,232,0.3);
+      width: 100%;
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 1px solid rgba(244,240,232,0.08);
+    }
+
+    @media (max-width: 720px) {
+      .layout { grid-template-columns: 1fr; gap: 32px; }
+      .toc { position: static; }
+      .section { padding: 28px 24px; }
+      .hero { padding: 48px 20px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <a class="nav-logo" href="/">tenssense<span>.</span></a>
+  <a class="nav-back" href="/">← главная</a>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">ЮРИДИЧЕСКИЙ ДОКУМЕНТ</div>
+    <h1>Политика конфиденциальности</h1>
+    <div class="hero-meta">
+      <span><span class="dot"></span>Редакция от 1 июня 2026 г.</span>
+      <span><span class="dot"></span>Вступает в силу немедленно</span>
+      <span><span class="dot"></span>tenssense.ru</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN LAYOUT -->
+<div class="layout">
+
+  <!-- SIDEBAR TOC -->
+  <aside class="toc">
+    <div class="toc-label">Содержание</div>
+    <ul class="toc-list">
+      <li><a href="#s1">1. Общие положения</a></li>
+      <li><a href="#s2">2. Какие данные мы собираем</a></li>
+      <li><a href="#s3">3. Как используем данные</a></li>
+      <li><a href="#s4">4. Передача третьим лицам</a></li>
+      <li><a href="#s5">5. Файлы cookie</a></li>
+      <li><a href="#s6">6. Хранение и защита</a></li>
+      <li><a href="#s7">7. Твои права</a></li>
+      <li><a href="#s8">8. Дети</a></li>
+      <li><a href="#s9">9. Изменения политики</a></li>
+      <li><a href="#s10">10. Контакт</a></li>
+    </ul>
+  </aside>
+
+  <!-- CONTENT -->
+  <main class="content">
+
+    <div class="section" id="s1">
+      <div class="section-num">01</div>
+      <h2>Общие положения</h2>
+      <p>tenssense («мы», «сервис») уважает конфиденциальность каждого ученика. Эта политика объясняет, какие персональные данные мы собираем, зачем и как их защищаем.</p>
+      <p>Пользуясь сайтом tenssense.ru, мобильным приложением или записываясь на тренировку, ты соглашаешься с условиями настоящей политики. Если ты не согласен — пожалуйста, не используй сервис.</p>
+      <div class="highlight">
+        <p><strong>Главный принцип.</strong> Мы берём только то, что нужно для работы программы. Ничего лишнего, ничего скрытого.</p>
+      </div>
+    </div>
+
+    <div class="section" id="s2">
+      <div class="section-num">02</div>
+      <h2>Какие данные мы собираем</h2>
+      <p>Данные, которые ты предоставляешь напрямую:</p>
+      <ul>
+        <li><strong>Имя и фамилия</strong> — для идентификации в системе и на корте</li>
+        <li><strong>Email и номер телефона</strong> — для связи и уведомлений о тренировках</li>
+        <li><strong>Текущий рейтинг NTRP</strong> — основа для формирования квартального плана</li>
+        <li><strong>Возраст и дата рождения</strong> — для программ Junior (7–14 лет) и разделения Adult / Junior треков</li>
+        <li><strong>Видеозаписи ударов</strong> — только с твоего явного согласия, для разбора техники</li>
+        <li><strong>История платежей</strong> — факт оплаты и сумма; данные карты не хранятся у нас</li>
+      </ul>
+      <p>Данные, которые собираются автоматически:</p>
+      <ul>
+        <li><strong>IP-адрес и тип устройства</strong> — для базовой аналитики и безопасности</li>
+        <li><strong>Страницы и разделы сайта</strong> — чтобы улучшать удобство навигации</li>
+        <li><strong>Файлы cookie</strong> — подробнее в разделе 5</li>
+      </ul>
+    </div>
+
+    <div class="section" id="s3">
+      <div class="section-num">03</div>
+      <h2>Как мы используем данные</h2>
+      <ul>
+        <li>Формирование персонального квартального плана тренировок (0.0 → 5.0 NTRP)</li>
+        <li>Запись и подтверждение корт-сессий с тренером</li>
+        <li>Отправка видеоразборов и материалов онлайн-программы</li>
+        <li>Уведомления о расписании, переносах и новых кварталах</li>
+        <li>Обработка платежей через защищённый платёжный шлюз</li>
+        <li>Улучшение методики и учебного контента на основе агрегированной статистики</li>
+        <li>Ответы на вопросы и техническая поддержка</li>
+      </ul>
+      <p>Мы не используем данные для рекламы третьих сторон и не продаём базу контактов.</p>
+    </div>
+
+    <div class="section" id="s4">
+      <div class="section-num">04</div>
+      <h2>Передача данных третьим лицам</h2>
+      <p>Мы передаём данные только тем сервисам, без которых работа программы невозможна:</p>
+      <ul>
+        <li><strong>Платёжный процессор</strong> (ЮKassa / Stripe) — для проведения оплаты. Данные карты не касаются наших серверов</li>
+        <li><strong>Сервис email-рассылок</strong> — для доставки расписания и учебных материалов</li>
+        <li><strong>Облачное хранилище</strong> — видеоматериалы хранятся на зашифрованных серверах с ограниченным доступом</li>
+        <li><strong>Аналитика</strong> — агрегированные и обезличенные данные о поведении на сайте</li>
+      </ul>
+      <p>Каждый из партнёров подписывает соглашение об обработке данных. Мы не передаём личную информацию без необходимости.</p>
+      <p>Исключение — требование закона: если государственный орган обяжет нас раскрыть данные в соответствии с законодательством РФ, мы выполним это требование и уведомим тебя, если это возможно.</p>
+    </div>
+
+    <div class="section" id="s5">
+      <div class="section-num">05</div>
+      <h2>Файлы cookie</h2>
+      <p>Мы используем три типа файлов cookie:</p>
+      <ul>
+        <li><strong>Необходимые</strong> — обеспечивают авторизацию и базовую работу сайта. Их нельзя отключить</li>
+        <li><strong>Функциональные</strong> — запоминают твои настройки (язык, часовой пояс, последний квартал)</li>
+        <li><strong>Аналитические</strong> — помогают нам понять, как ученики пользуются сервисом, без привязки к личности</li>
+      </ul>
+      <p>При первом визите ты увидишь баннер с выбором. Отказаться от аналитических cookie можно в настройках браузера в любое время.</p>
+    </div>
+
+    <div class="section" id="s6">
+      <div class="section-num">06</div>
+      <h2>Хранение и защита данных</h2>
+      <p>Персональные данные хранятся на серверах, расположенных на территории Российской Федерации, в соответствии с 242-ФЗ.</p>
+      <ul>
+        <li>Передача данных — только по протоколу HTTPS с актуальным TLS-сертификатом</li>
+        <li>Пароли хранятся в хэшированном виде (bcrypt). Мы не знаем твой пароль</li>
+        <li>Видеофайлы с разборами — на закрытом хранилище с доступом только для ученика и его тренера</li>
+        <li>Регулярный аудит прав доступа сотрудников</li>
+      </ul>
+      <p>Если произойдёт утечка данных, мы уведомим тебя в течение 72 часов после того, как узнаем об инциденте.</p>
+      <p>Данные хранятся <strong>три года</strong> после последней активности аккаунта, затем удаляются. Платёжные записи — семь лет в соответствии с требованиями бухгалтерского учёта.</p>
+    </div>
+
+    <div class="section" id="s7">
+      <div class="section-num">07</div>
+      <h2>Твои права</h2>
+      <p>В соответствии с Федеральным законом №152-ФЗ «О персональных данных» ты имеешь право:</p>
+      <ul>
+        <li><strong>Получить доступ</strong> — запросить, какие данные мы о тебе храним</li>
+        <li><strong>Исправить</strong> — скорректировать неточные или устаревшие данные</li>
+        <li><strong>Удалить</strong> — попросить удалить аккаунт и все связанные данные («право на забвение»)</li>
+        <li><strong>Ограничить обработку</strong> — приостановить использование данных на период проверки</li>
+        <li><strong>Перенести данные</strong> — получить свою историю тренировок и рейтингов в машиночитаемом формате</li>
+        <li><strong>Отозвать согласие</strong> — в частности, отозвать согласие на использование видео в любой момент</li>
+      </ul>
+      <p>Запрос обрабатывается в течение 30 дней. Чтобы подать запрос — напиши нам на контакты из раздела 10.</p>
+    </div>
+
+    <div class="section" id="s8">
+      <div class="section-num">08</div>
+      <h2>Дети</h2>
+      <p>Программа Junior предназначена для детей от 7 до 14 лет. Аккаунт и согласие на обработку данных оформляет родитель или законный представитель.</p>
+      <p>Мы не собираем данные детей без явного согласия взрослого. Видеозаписи занятий детей хранятся строго в закрытом доступе и не публикуются без подписанного согласия родителя.</p>
+      <div class="highlight">
+        <p>Если ты узнал, что ребёнок зарегистрировался без твоего ведома — напиши нам немедленно. Мы удалим аккаунт и все данные.</p>
+      </div>
+    </div>
+
+    <div class="section" id="s9">
+      <div class="section-num">09</div>
+      <h2>Изменения политики</h2>
+      <p>Мы можем обновлять политику конфиденциальности. При существенных изменениях уведомим тебя по email не позднее чем за 14 дней до вступления изменений в силу.</p>
+      <p>Актуальная версия всегда доступна на этой странице. Дата последней редакции указана в верхней части документа.</p>
+      <p>Продолжение использования сервиса после вступления изменений в силу означает согласие с обновлённой политикой.</p>
+    </div>
+
+    <div class="section" id="s10">
+      <div class="section-num">10</div>
+      <h2>Контакт</h2>
+      <p>Вопросы по обработке персональных данных, запросы на удаление или исправление — пиши напрямую:</p>
+      <div class="contact-card">
+        <div class="label">Ответственный за данные · tenssense</div>
+        <a href="mailto:hello@tenssense.ru">hello@tenssense.ru</a>
+        <a href="https://t.me/tenssense">Telegram: @tenssense</a>
+        <a href="https://vk.com/tenssense">ВКонтакте: vk.com/tenssense</a>
+      </div>
+      <p style="margin-top: 20px; font-size: 14px; color: var(--color-ink-3);">Срок ответа — до 5 рабочих дней. Запросы на удаление данных обрабатываются до 30 дней.</p>
+    </div>
+
+  </main>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">tenssense</div>
+    <div class="footer-links">
+      <a href="#">Политика</a>
+      <a href="#">Оферта</a>
+      <a href="#">Cookies</a>
+    </div>
+    <div class="footer-copy">© 2026 tenssense · Все права защищены · ОГРН · Российская Федерация</div>
+  </div>
+</footer>
+
+</body>
+</html>
