@@ -71,16 +71,18 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
 }
 .ts-close:hover{background:rgba(244,240,232,.2)}
 .ts-counter{
-  font-family:'Unbounded',sans-serif;font-weight:900;font-size:26px;
-  color:#f4f0e8;line-height:1;position:relative;
+  font-family:'Onest',sans-serif;font-weight:500;font-size:13px;
+  color:rgba(244,240,232,0.55);line-height:1;position:relative;
+  letter-spacing:.04em;margin-top:6px;
 }
-.ts-counter em{color:var(--primary);font-style:normal}
+.ts-counter em{color:var(--primary);font-style:normal;font-weight:700;}
+
 
 /* BODY */
 .ts-body{padding:22px 28px 8px;overflow-y:auto;flex:1}
 .ts-question{
-  font-family:'Unbounded',sans-serif;font-weight:800;
-  font-size:15px;letter-spacing:-.02em;line-height:1.35;
+  font-family:'Unbounded',sans-serif;font-weight:700;
+  font-size:17px;letter-spacing:-.02em;line-height:1.35;
   color:var(--ink);margin-bottom:18px;
 }
 .ts-hint{font-size:11px;color:var(--ink3);margin-bottom:14px;margin-top:-10px}
@@ -92,7 +94,7 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
   padding:13px 18px;background:var(--surface);
   border:1.5px solid var(--line);border-radius:12px;
   cursor:pointer;transition:all .15s;
-  font-size:14px;font-weight:500;color:var(--ink);text-align:left;
+  font-size:13px;font-weight:400;color:var(--ink2);text-align:left;
   width:100%;
 }
 .ts-opt:hover{border-color:rgba(13,26,38,.35);background:#fafaf8}
@@ -102,8 +104,8 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
   width:22px;height:22px;border-radius:50%;flex-shrink:0;
   border:1.5px solid var(--line);background:var(--canvas);
   display:flex;align-items:center;justify-content:center;
-  font-size:10px;font-weight:800;font-family:'Unbounded',sans-serif;
-  transition:all .15s;
+  font-size:10px;font-weight:600;font-family:'Onest',sans-serif;
+  transition:all .15s;color:var(--ink3);
 }
 .ts-opt.multi .ts-marker{border-radius:6px}
 
@@ -191,22 +193,57 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
 .ts-bar-track{height:10px;background:var(--line);border-radius:999px;overflow:hidden}
 .ts-bar-fill{height:100%;border-radius:999px;background:var(--primary);width:0;transition:width 1s cubic-bezier(.22,1,.36,1)}
 .ts-bar-scale{display:flex;justify-content:space-between;font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;color:var(--ink3);margin-top:6px}
-.ts-cta{
-  background:var(--primary);border-radius:14px;
-  padding:18px 20px;display:flex;align-items:center;
-  justify-content:space-between;gap:12px;
+.ts-result-actions{
+  display:flex;flex-direction:column;gap:10px;
 }
-.ts-cta-text{font-size:14px;font-weight:600;color:var(--ink);line-height:1.35}
-.ts-cta-sub{font-size:11px;color:var(--ink2);margin-top:3px}
-.ts-cta-btn{
-  font-family:'Onest',sans-serif;font-size:13px;font-weight:700;
-  color:#f4f0e8;background:var(--ink);
-  border:none;border-radius:999px;padding:11px 20px;
-  cursor:pointer;white-space:nowrap;flex-shrink:0;
-  text-decoration:none;display:inline-block;
-  transition:background .15s;
+.ts-btn-primary{
+  font-family:'Onest',sans-serif;font-size:15px;font-weight:600;
+  color:var(--ink);background:var(--primary);
+  border:none;border-radius:999px;padding:14px 24px;
+  cursor:pointer;text-align:center;text-decoration:none;
+  display:block;transition:background .15s;
 }
-.ts-cta-btn:hover{background:var(--ink2)}
+.ts-btn-primary:hover{background:#e3ff66}
+.ts-btn-ghost{
+  font-family:'Onest',sans-serif;font-size:14px;font-weight:500;
+  color:var(--ink3);background:transparent;
+  border:none;border-radius:999px;padding:10px 24px;
+  cursor:pointer;text-align:center;transition:color .15s;
+}
+.ts-btn-ghost:hover{color:var(--ink)}
+/* contact block on result screen */
+.ts-contact-block{
+  background:var(--surface);border-radius:14px;
+  padding:18px 20px;display:flex;flex-direction:column;gap:12px;
+}
+.ts-contact-desc{
+  font-size:13px;color:var(--ink2);line-height:1.55;
+}
+.ts-field-wrap{display:flex;flex-direction:column;gap:4px}
+.ts-field{
+  background:var(--canvas);border:1.5px solid var(--line);
+  border-radius:12px;padding:13px 18px;
+  font-family:'Onest',sans-serif;font-size:14px;font-weight:400;
+  color:var(--ink);width:100%;outline:none;transition:border .15s;
+}
+.ts-field:focus{border-color:var(--ink)}
+.ts-field.error{border-color:var(--negative)!important}
+.ts-field-err{font-size:11px;color:var(--negative);display:none}
+.ts-field-err.show{display:block}
+.ts-btn-send{
+  font-family:'Onest',sans-serif;font-size:14px;font-weight:600;
+  color:var(--ink);background:var(--primary);
+  border:none;border-radius:999px;padding:13px 24px;
+  cursor:pointer;transition:background .15s;
+  width:100%;
+}
+.ts-btn-send:hover:not(:disabled){background:#e3ff66}
+.ts-btn-send:disabled{background:var(--line);color:var(--ink3);cursor:not-allowed}
+.ts-send-ok{
+  display:none;
+  font-size:14px;font-weight:600;color:var(--positive);
+  text-align:center;padding:8px 0;
+}
 .ts-brand{
   font-family:'Unbounded',sans-serif;font-size:12px;font-weight:800;
   color:var(--ink3);letter-spacing:-.02em;text-align:center;
@@ -223,8 +260,8 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
   .ts-footer{padding:12px 20px 20px}
   .ts-result-body{padding:16px 20px 20px}
   .ts-result-band{padding:22px 20px 20px}
-  .ts-counter{font-size:22px}
   .ts-result-idx{font-size:58px}
+  .ts-counter{font-size:12px}
 }
 </style>
 </head>
@@ -250,12 +287,53 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
 (function(){
 'use strict';
 
-/* ══════════════════════════════════════════════════════
-   НАСТРОЙКИ — ВСТАВЬ СВОИ ДАННЫЕ
-   ══════════════════════════════════════════════════════ */
-var TG_TOKEN  = 'СЮДА_ТОКЕН_БОТА';   // например: 7123456789:AAFxxxxxxx
-var TG_CHAT   = 'СЮДА_CHAT_ID';      // например: -100123456789 или 123456789
-/* ══════════════════════════════════════════════════════ */
+/* ─── ОТПРАВКА В TELEGRAM ─────────────────────────────── */
+var TG_TOKEN = 'СЮДА_ТОКЕН_БОТА';  /* например: 7123456789:AAFxxxxxxx */
+var TG_CHAT  = 'СЮДА_CHAT_ID';     /* например: 123456789 или -100123456789 */
+
+function buildMessage(contact, pct, label){
+  var expOpts  = ['Нулевой','Занимаюсь год','Больше двух лет'];
+  var tenOpts  = ['Развлечение и активный отдых','Вид искусства','Способ самопознания и самореализации'];
+  var goalOpts = ['Научиться играть правильно и красиво','Участвовать в любительских турнирах','Стать профессиональным теннисистом'];
+  var langOpts = ['Только на родном','Два языка','Три и более'];
+  var creativeOpts = ['Танцы','Музыка','Рисование','Ничем'];
+  var successOpts  = ['Талант','Стремление','Трудолюбие'];
+  var priOpts  = ['Процесс','Результат'];
+
+  function pick(qi, opts){ return state.ans[qi]!==null ? opts[state.ans[qi]] : '—'; }
+  function pickMulti(qi, opts){
+    var a = state.ans[qi];
+    if(!a||!a.length) return 'Не выбрано';
+    return a.map(function(i){ return opts[i]; }).join(', ');
+  }
+
+  return '🎾 *Новая заявка — tenssense*\n\n'
+    +'📱 *Контакт:* '+contact+'\n'
+    +'📊 *Индекс обучаемости:* '+pct+'% — '+label+'\n\n'
+    +'─── Анкета ───\n'
+    +'1. Опыт: '+pick(0, expOpts)+'\n'
+    +'2. Теннис — это: '+pick(1, tenOpts)+'\n'
+    +'3. Цель: '+pick(2, goalOpts)+'\n'
+    +'4. Возраст: '+(state.ans[3]||'—')+' лет\n'
+    +'5. Языки: '+pick(4, langOpts)+'\n'
+    +'6. Творчество: '+pickMulti(5, creativeOpts)+'\n'
+    +'7. Спорт ранее: '+pick(6, ['Да','Нет'])+'\n'
+    +'8. Геометрия: '+pick(7, ['Да','Нет'])+'\n'
+    +'9. Успех = : '+pick(8, successOpts)+'\n'
+    +'10. Важнее: '+pick(9, priOpts);
+}
+
+function sendToTelegram(contact, pct, label, cb){
+  var url  = 'https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage';
+  var body = JSON.stringify({
+    chat_id: TG_CHAT,
+    text: buildMessage(contact, pct, label),
+    parse_mode: 'Markdown'
+  });
+  fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:body})
+    .then(function(){ cb(true); })
+    .catch(function(){ cb(false); });
+}
 
 var Q=[
   {id:1, text:'Какой у вас опыт в теннисе?', type:'single', score:false,
@@ -268,7 +346,7 @@ var Q=[
   {id:5, text:'На скольких языках вы можете свободно говорить?', type:'single', score:true,
    opts:['Только на родном','Два языка','Три и более'], pts:[1,2,3]},
   {id:6, text:'Обучались ли какой-либо творческой деятельности?', type:'multi', score:true,
-   opts:['Танцы','Музыка','Рисование'], pts:[1,1,1]},
+   opts:['Танцы','Музыка','Рисование','Ничем'], pts:[1,1,1,0]},
   {id:7, text:'Занимались ли ранее каким-либо видом спорта?', type:'yesno', score:true,
    opts:['Да','Нет'], pts:[3,1]},
   {id:8, text:'В школе любили геометрию?', type:'yesno', score:true,
@@ -276,15 +354,13 @@ var Q=[
   {id:9, text:'Что важнее для успеха в любом деле?', type:'single', score:true,
    opts:['Талант','Стремление','Трудолюбие'], pts:[1,2,3]},
   {id:10, text:'Что для вас важнее в том, чем вы занимаетесь?', type:'single', score:false,
-   opts:['Процесс','Результат']},
-  /* ШАГ 11 — КОНТАКТЫ */
-  {id:11, text:'Осталось последнее.', type:'contact', score:false}
+   opts:['Процесс','Результат']}
 ];
 
-var TOTAL_STEPS = Q.length; /* 11 */
+var TOTAL_STEPS = Q.length; /* 10 */
 var MAX = 15;
 
-var state = {cur:0, ans:Array(11).fill(null), multi:[]};
+var state = {cur:0, ans:Array(10).fill(null), multi:[]};
 
 /* ─── ПОДСЧЁТ ─────────────────────────────────────────── */
 function calcScore(){
@@ -324,15 +400,13 @@ function render(){
 }
 
 function prog(){
-  /* прогресс показываем до шага 11 включительно */
   return Math.round((state.cur / TOTAL_STEPS) * 100);
 }
 
 function canNext(){
   var c=state.cur, q=Q[c];
-  if(q.type==='age')    return state.ans[c]!==null && String(state.ans[c]).length>0;
-  if(q.type==='multi')  return state.multi.length>0;
-  if(q.type==='contact') return false; /* управляется отдельно */
+  if(q.type==='age')   return state.ans[c]!==null && String(state.ans[c]).length>0;
+  if(q.type==='multi') return state.multi.length>0;
   return state.ans[c]!==null;
 }
 
@@ -349,22 +423,6 @@ function renderQ(root){
       +'<span class="ts-age-lbl">полных лет</span>'
       +'</div>';
 
-  } else if(q.type==='contact'){
-    inner = '<div class="ts-contact-form">'
-      +'<p style="font-size:13px;color:var(--ink2);margin-bottom:4px;line-height:1.5">Введи свои данные — я отвечу лично и расскажу, что значит твой результат.</p>'
-      +'<div class="ts-field-wrap">'
-        +'<label class="ts-field-label" for="ts-name">Имя</label>'
-        +'<input class="ts-field" id="ts-name" type="text" placeholder="Александр" autocomplete="given-name">'
-        +'<span class="ts-field-err" id="ts-name-err">Введи своё имя</span>'
-      +'</div>'
-      +'<div class="ts-field-wrap">'
-        +'<label class="ts-field-label" for="ts-contact">Телефон или Telegram</label>'
-        +'<input class="ts-field" id="ts-contact" type="text" placeholder="+7 900 000-00-00 или @username" autocomplete="tel">'
-        +'<span class="ts-field-err" id="ts-contact-err">Введи телефон или ник в Telegram</span>'
-      +'</div>'
-      +'<p class="ts-privacy">Нажимая «Узнать результат», вы соглашаетесь с <a href="https://www.tenssense.net/privacy.html" target="_blank">политикой конфиденциальности</a></p>'
-      +'</div>';
-
   } else {
     inner += '<div class="ts-opts">';
     q.opts.forEach(function(o,i){
@@ -377,9 +435,9 @@ function renderQ(root){
     inner += '</div>';
   }
 
-  var isLast  = state.cur === Q.length-1;  /* шаг 11 */
-  var btnLabel = isLast ? 'Узнать результат →' : 'Далее →';
-  var btnDisabled = (q.type==='contact') ? '' : (canNext() ? '' : ' disabled');
+  var isLast     = state.cur === Q.length-1;
+  var btnLabel   = isLast ? 'Узнать результат →' : 'Далее →';
+  var btnDisabled = canNext() ? '' : ' disabled';
 
   root.innerHTML =
     '<div class="ts-progress"><div class="ts-progress-fill" style="width:'+prog()+'%"></div></div>'
@@ -390,7 +448,7 @@ function renderQ(root){
           +'<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
         +'</button>'
       +'</div>'
-      /* счётчик убран */
+      +'<div class="ts-counter"><em>'+(state.cur+1)+'</em>/'+TOTAL_STEPS+'</div>'
     +'</div>'
     +'<div class="ts-body">'
       +'<div class="ts-question">'+q.text+'</div>'
@@ -410,16 +468,12 @@ function renderQ(root){
 
   var nextBtn = document.getElementById('ts-next');
   if(nextBtn){
-    if(q.type==='contact'){
-      nextBtn.addEventListener('click', submitContact);
-    } else {
-      nextBtn.addEventListener('click', function(){
-        if(q.type==='multi') state.ans[state.cur]=[].concat(state.multi);
-        state.cur++;
-        state.multi=[];
-        render();
-      });
-    }
+    nextBtn.addEventListener('click', function(){
+      if(q.type==='multi') state.ans[state.cur]=[].concat(state.multi);
+      state.cur++;
+      state.multi=[];
+      render();
+    });
   }
 
   if(q.type==='age'){
@@ -430,21 +484,20 @@ function renderQ(root){
       if(nb) nb.disabled = !this.value;
     });
 
-  } else if(q.type==='contact'){
-    /* enable кнопки по мере заполнения */
-    ['ts-name','ts-contact'].forEach(function(id){
-      var el = document.getElementById(id);
-      if(el) el.addEventListener('input', updateContactBtn);
-    });
-    updateContactBtn();
-
   } else {
     root.querySelectorAll('.ts-opt').forEach(function(btn){
       btn.addEventListener('click', function(){
         var i = parseInt(this.dataset.i);
         if(isMulti){
-          var idx = state.multi.indexOf(i);
-          if(idx>-1){ state.multi.splice(idx,1); } else { state.multi.push(i); }
+          var noneIdx = Q[state.cur].opts.length - 1;
+          var isNone  = (i === noneIdx);
+          if(isNone){
+            state.multi = [noneIdx];
+          } else {
+            state.multi = state.multi.filter(function(x){ return x !== noneIdx; });
+            var idx = state.multi.indexOf(i);
+            if(idx>-1){ state.multi.splice(idx,1); } else { state.multi.push(i); }
+          }
           state.ans[state.cur] = [].concat(state.multi);
         } else {
           state.ans[state.cur] = i;
@@ -455,118 +508,17 @@ function renderQ(root){
   }
 }
 
-function updateContactBtn(){
-  var name    = (document.getElementById('ts-name')    ||{}).value||'';
-  var contact = (document.getElementById('ts-contact') ||{}).value||'';
-  var btn     = document.getElementById('ts-next');
-  if(btn) btn.disabled = !(name.trim() && contact.trim());
-}
-
-/* ─── ВАЛИДАЦИЯ И ОТПРАВКА ────────────────────────────── */
-function submitContact(){
-  var nameEl    = document.getElementById('ts-name');
-  var contactEl = document.getElementById('ts-contact');
-  var nameErr   = document.getElementById('ts-name-err');
-  var contactErr= document.getElementById('ts-contact-err');
-  var ok = true;
-
-  if(!nameEl.value.trim()){
-    nameEl.classList.add('error');
-    nameErr.classList.add('show');
-    ok = false;
-  } else {
-    nameEl.classList.remove('error');
-    nameErr.classList.remove('show');
-  }
-  if(!contactEl.value.trim()){
-    contactEl.classList.add('error');
-    contactErr.classList.add('show');
-    ok = false;
-  } else {
-    contactEl.classList.remove('error');
-    contactErr.classList.remove('show');
-  }
-  if(!ok) return;
-
-  /* сохраняем */
-  state.ans[10] = {name: nameEl.value.trim(), contact: contactEl.value.trim()};
-
-  /* блокируем кнопку */
-  var btn = document.getElementById('ts-next');
-  if(btn){ btn.classList.add('loading'); btn.textContent = 'Отправляем...'; }
-
-  sendToTelegram(function(success){
-    state.cur++;
-    render();
-  });
-}
-
-/* ─── ОТПРАВКА В TELEGRAM ─────────────────────────────── */
-function buildMessage(){
-  var score = calcScore();
-  var pct   = Math.round((score / MAX) * 100);
-  var contact = state.ans[10] || {};
-
-  var expOpts  = ['Нулевой','Занимаюсь год','Больше двух лет'];
-  var tenOpts  = ['Развлечение и активный отдых','Вид искусства','Способ самопознания и самореализации'];
-  var goalOpts = ['Научиться играть правильно и красиво','Участвовать в любительских турнирах','Стать профессиональным теннисистом'];
-  var langOpts = ['Только на родном','Два языка','Три и более'];
-  var creativeOpts = ['Танцы','Музыка','Рисование'];
-  var successOpts  = ['Талант','Стремление','Трудолюбие'];
-  var priOpts  = ['Процесс','Результат'];
-
-  function pick(qi, opts){ return state.ans[qi]!==null ? opts[state.ans[qi]] : '—'; }
-  function pickMulti(qi, opts){
-    var a = state.ans[qi];
-    if(!a||!a.length) return 'Не выбрано';
-    return a.map(function(i){ return opts[i]; }).join(', ');
-  }
-
-  var resultLabel = pct>=80 ? 'Высокий индекс обучаемости'
-                 : pct>=55 ? 'Хороший потенциал'
-                 :           'Осваивает в своём темпе';
-
-  return '🎾 *Новая заявка с сайта tenssense*\n\n'
-    +'👤 *Имя:* '+contact.name+'\n'
-    +'📱 *Контакт:* '+contact.contact+'\n\n'
-    +'📊 *Индекс обучаемости:* '+pct+'% — '+resultLabel+'\n\n'
-    +'─── Анкета ───\n'
-    +'1. Опыт в теннисе: '+pick(0, expOpts)+'\n'
-    +'2. Теннис — это: '+pick(1, tenOpts)+'\n'
-    +'3. Цель: '+pick(2, goalOpts)+'\n'
-    +'4. Возраст: '+(state.ans[4]||'—')+' лет\n'
-    +'5. Языки: '+pick(4, langOpts)+'\n'
-    +'6. Творчество: '+pickMulti(5, creativeOpts)+'\n'
-    +'7. Спорт ранее: '+pick(6, ['Да','Нет'])+'\n'
-    +'8. Любил геометрию: '+pick(7, ['Да','Нет'])+'\n'
-    +'9. Успех = : '+pick(8, successOpts)+'\n'
-    +'10. Важнее: '+pick(9, priOpts);
-}
-
-function sendToTelegram(cb){
-  var url  = 'https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage';
-  var body = JSON.stringify({chat_id: TG_CHAT, text: buildMessage(), parse_mode:'Markdown'});
-  fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:body})
-    .then(function(r){ return r.json(); })
-    .then(function(){ cb(true); })
-    .catch(function(){ cb(false); });
-}
-
 /* ─── РЕЗУЛЬТАТ ───────────────────────────────────────── */
 function renderResult(root){
   var score = calcScore();
   var pct   = Math.round((score/MAX)*100);
   var r     = getResult(pct);
 
-  var tgLinks = {0:'https://t.me/m/hSc8BrNUZjYy', 1:'https://t.me/m/DsDCLnZ5NGYy', 2:'https://t.me/m/eC7hBEnJZDEy'};
-  var tgHref  = state.ans[2]!==null ? (tgLinks[state.ans[2]]||tgLinks[0]) : tgLinks[0];
-
   root.innerHTML =
     '<div class="ts-result-band">'
       +'<div class="ts-result-ey">РЕЗУЛЬТАТ · ИНДЕКС ОБУЧАЕМОСТИ</div>'
       +'<div class="ts-result-idx">'+pct+'<em>%</em></div>'
       +'<div class="ts-result-label">'+r.label+'</div>'
-      +'<div class="ts-result-sub">'+r.sub+'</div>'
       +'<button class="ts-result-close" id="ts-rclose" type="button" aria-label="Закрыть">'
         +'<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
       +'</button>'
@@ -577,12 +529,14 @@ function renderResult(root){
         +'<div class="ts-bar-track"><div class="ts-bar-fill" id="ts-rfill"></div></div>'
         +'<div class="ts-bar-scale"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>'
       +'</div>'
-      +'<div class="ts-cta">'
-        +'<div>'
-          +'<div class="ts-cta-text">'+r.cta+'</div>'
-          +'<div class="ts-cta-sub">Первая консультация бесплатно</div>'
+      +'<div class="ts-contact-block">'
+        +'<p class="ts-contact-desc">Если тебе интересно узнать, что эта цифра означает — ты можешь получить полную расшифровку и личную консультацию от меня.</p>'
+        +'<div class="ts-field-wrap">'
+          +'<input class="ts-field" id="ts-contact-inp" type="text" placeholder="Номер телефона или ник в Telegram">'
+          +'<span class="ts-field-err" id="ts-contact-err">Введи номер или @username</span>'
         +'</div>'
-        +'<a class="ts-cta-btn" href="'+tgHref+'" target="_blank" rel="noopener">В Telegram →</a>'
+        +'<button class="ts-btn-send" id="ts-send-btn" type="button">Отправить</button>'
+        +'<div class="ts-send-ok" id="ts-send-ok">Готово — жди ответа 🎾</div>'
       +'</div>'
       +'<div class="ts-brand">tenssense<span>.</span></div>'
     +'</div>';
@@ -594,11 +548,32 @@ function renderResult(root){
 
   var rc = document.getElementById('ts-rclose');
   if(rc) rc.addEventListener('click', closeModal);
+
+  var sendBtn = document.getElementById('ts-send-btn');
+  if(sendBtn) sendBtn.addEventListener('click', function(){
+    var inp = document.getElementById('ts-contact-inp');
+    var err = document.getElementById('ts-contact-err');
+    var ok_el = document.getElementById('ts-send-ok');
+    if(!inp.value.trim()){
+      inp.classList.add('error');
+      err.classList.add('show');
+      return;
+    }
+    inp.classList.remove('error');
+    err.classList.remove('show');
+    sendBtn.disabled = true;
+    sendBtn.textContent = 'Отправляем...';
+    sendToTelegram(inp.value.trim(), pct, r.label, function(){
+      sendBtn.style.display = 'none';
+      inp.style.display = 'none';
+      ok_el.style.display = 'block';
+    });
+  });
 }
 
 /* ─── ОТКРЫТИЕ / ЗАКРЫТИЕ ─────────────────────────────── */
 function openModal(){
-  state = {cur:0, ans:Array(11).fill(null), multi:[]};
+  state = {cur:0, ans:Array(10).fill(null), multi:[]};
   render();
   document.getElementById('ts-overlay').classList.add('open');
   document.body.style.overflow = 'hidden';
