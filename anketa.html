@@ -255,7 +255,7 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
     Пройти тест-опросник
   </button>
-  <p style="margin-top:12px;font-size:12px;color:var(--ink3)">для того, чтобы записаться на программу. Это займёт 2 минуты · 10 вопросов</p>
+  <p style="margin-top:12px;font-size:12px;color:var(--ink3)">для того, чтобы записаться на программу.</br>Это займёт 2 минуты · 10 вопросов</p>
 </div>
 
 <!-- OVERLAY -->
@@ -297,7 +297,7 @@ function buildMessage(pct, label){
     +'1. Опыт: '+pick(0, expOpts)+'\n'
     +'2. Теннис — это: '+pick(1, tenOpts)+'\n'
     +'3. Цель: '+pick(2, goalOpts)+'\n'
-    +'4. Возраст: '+(state.ans[3]||'—')+' лет\n'
+    +'4. Возраст: '+(state.ans[4]||'—')+' лет\n'
     +'5. Языки: '+pick(4, langOpts)+'\n'
     +'6. Творчество: '+pickMulti(5, creativeOpts)+'\n'
     +'7. Спорт ранее: '+pick(6, ['Да','Нет'])+'\n'
