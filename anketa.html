@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>tenssense · Анкета</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@800;900&family=Onest:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --ink:#0d1a26;--canvas:#f4f0e8;--surface:#fff;--primary:#d8ff3d;
+  --ink2:#3d4a55;--ink3:#6a7480;--line:rgba(13,26,38,0.12);
+  --clay:#d45d2e;--positive:#2f6b3a;--positive-pale:#e1efe3;
+  --negative:#c5302f;--negative-pale:#fadcdc;
+}
+body{font-family:'Onest',sans-serif;color:var(--ink)}
+
+/* TRIGGER */
+.ts-trigger{
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:'Onest',sans-serif;font-size:15px;font-weight:600;
+  color:var(--ink);background:var(--primary);
+  border:none;border-radius:999px;padding:14px 28px;
+  cursor:pointer;transition:background .18s;
+}
+.ts-trigger:hover{background:#e3ff66}
+
+/* OVERLAY */
+.ts-overlay{
+  position:fixed;inset:0;z-index:99999;
+  background:rgba(13,26,38,.72);
+  display:flex;align-items:center;justify-content:center;
+  padding:16px;
+  opacity:0;pointer-events:none;
+  transition:opacity .25s;
+}
+.ts-overlay.open{opacity:1;pointer-events:auto}
+
+/* MODAL */
+.ts-modal{
+  background:var(--canvas);border-radius:20px;
+  width:100%;max-width:520px;max-height:92vh;
+  overflow:hidden;display:flex;flex-direction:column;
+  transform:translateY(24px);
+  transition:transform .3s cubic-bezier(.22,1,.36,1);
+}
+.ts-overlay.open .ts-modal{transform:translateY(0)}
+
+/* PROGRESS */
+.ts-progress{height:4px;background:var(--line);flex-shrink:0}
+.ts-progress-fill{height:100%;background:var(--primary);transition:width .35s cubic-bezier(.22,1,.36,1)}
+
+/* HEADER */
+.ts-header{
+  background:var(--ink);padding:22px 28px 20px;flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.ts-header::before{
+  content:'';position:absolute;inset:0;opacity:.14;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 520 88' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='16' y='8' width='488' height='72' fill='none' stroke='%23d8ff3d' stroke-width='1.5'/%3E%3Cline x1='36' y1='8' x2='36' y2='80' stroke='%23d8ff3d' stroke-width='1'/%3E%3Cline x1='484' y1='8' x2='484' y2='80' stroke='%23d8ff3d' stroke-width='1'/%3E%3Cline x1='260' y1='8' x2='260' y2='80' stroke='%23d8ff3d' stroke-width='2'/%3E%3C/svg%3E") center/cover;
+}
+.ts-header-top{display:flex;align-items:center;justify-content:space-between;position:relative;margin-bottom:10px}
+.ts-eyebrow{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary)}
+.ts-close{
+  background:rgba(244,240,232,.1);border:none;border-radius:50%;
+  width:32px;height:32px;cursor:pointer;color:#f4f0e8;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s;flex-shrink:0;
+}
+.ts-close:hover{background:rgba(244,240,232,.2)}
+.ts-counter{
+  font-family:'Onest',sans-serif;font-weight:500;font-size:13px;
+  color:rgba(244,240,232,0.55);line-height:1;position:relative;
+  letter-spacing:.04em;margin-top:6px;
+}
+.ts-counter em{color:var(--primary);font-style:normal;font-weight:700;}
+
+
+/* BODY */
+.ts-body{padding:22px 28px 8px;overflow-y:auto;flex:1}
+.ts-question{
+  font-family:'Unbounded',sans-serif;font-weight:700;
+  font-size:17px;letter-spacing:-.02em;line-height:1.35;
+  color:var(--ink);margin-bottom:18px;
+}
+.ts-hint{font-size:11px;color:var(--ink3);margin-bottom:14px;margin-top:-10px}
+
+/* OPTIONS */
+.ts-opts{display:flex;flex-direction:column;gap:8px}
+.ts-opt{
+  display:flex;align-items:center;gap:14px;
+  padding:13px 18px;background:var(--surface);
+  border:1.5px solid var(--line);border-radius:12px;
+  cursor:pointer;transition:all .15s;
+  font-size:13px;font-weight:400;color:var(--ink2);text-align:left;
+  width:100%;
+}
+.ts-opt:hover{border-color:rgba(13,26,38,.35);background:#fafaf8}
+.ts-opt.selected{border-color:var(--ink);background:var(--ink);color:#f4f0e8}
+.ts-opt.selected .ts-marker{background:var(--primary);border-color:var(--primary);color:var(--ink)}
+.ts-marker{
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  border:1.5px solid var(--line);background:var(--canvas);
+  display:flex;align-items:center;justify-content:center;
+  font-size:10px;font-weight:600;font-family:'Onest',sans-serif;
+  transition:all .15s;color:var(--ink3);
+}
+.ts-opt.multi .ts-marker{border-radius:6px}
+
+/* AGE INPUT */
+.ts-age-wrap{display:flex;align-items:center;gap:12px}
+.ts-age-input{
+  background:var(--surface);border:1.5px solid var(--line);
+  border-radius:12px;padding:13px 18px;
+  font-family:'Onest',sans-serif;font-size:16px;font-weight:600;
+  color:var(--ink);width:110px;outline:none;transition:border .15s;
+}
+.ts-age-input:focus{border-color:var(--ink)}
+.ts-age-lbl{font-size:13px;color:var(--ink3)}
+
+/* INTRO FIELDS (шаг 0) */
+.ts-intro-fields{display:flex;flex-direction:column;gap:10px}
+.ts-intro-field{
+  background:var(--surface);border:1.5px solid var(--line);
+  border-radius:12px;padding:13px 18px;
+  font-family:'Onest',sans-serif;font-size:15px;font-weight:400;
+  color:var(--ink);width:100%;outline:none;transition:border .15s;
+}
+.ts-intro-field:focus{border-color:var(--ink)}
+.ts-intro-field.ts-err{border-color:var(--negative)!important}
+.ts-intro-errmsg{font-size:11px;color:var(--negative);display:none;margin-top:-4px}
+.ts-intro-errmsg.show{display:block}
+
+/* CONTACT FORM (step 11) */
+.ts-contact-form{display:flex;flex-direction:column;gap:12px}
+.ts-field-label{font-size:12px;font-weight:600;color:var(--ink2);margin-bottom:4px;display:block}
+.ts-field-wrap{display:flex;flex-direction:column;gap:4px}
+.ts-field{
+  background:var(--surface);border:1.5px solid var(--line);
+  border-radius:12px;padding:13px 18px;
+  font-family:'Onest',sans-serif;font-size:15px;font-weight:500;
+  color:var(--ink);width:100%;outline:none;transition:border .15s;
+}
+.ts-field:focus{border-color:var(--ink)}
+.ts-field.error{border-color:var(--negative)!important}
+.ts-field-err{font-size:11px;color:var(--negative);display:none}
+.ts-field-err.show{display:block}
+.ts-privacy{font-size:11px;color:var(--ink3);line-height:1.5;margin-top:4px}
+.ts-privacy a{color:var(--ink3)}
+
+/* FOOTER */
+.ts-footer{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:14px 28px 22px;flex-shrink:0;
+}
+.ts-btn-back{
+  font-family:'Onest',sans-serif;font-size:13px;font-weight:600;
+  color:var(--ink3);background:transparent;border:none;cursor:pointer;
+  padding:8px 0;
+}
+.ts-btn-next{
+  font-family:'Onest',sans-serif;font-size:14px;font-weight:600;
+  color:var(--ink);background:var(--primary);
+  border:none;border-radius:999px;padding:12px 24px;
+  cursor:pointer;display:flex;align-items:center;gap:6px;
+  transition:background .15s;
+}
+.ts-btn-next:disabled{background:var(--line);color:var(--ink3);cursor:not-allowed}
+.ts-btn-next:not(:disabled):hover{background:#e3ff66}
+.ts-btn-next.loading{opacity:.7;pointer-events:none}
+
+/* RESULT */
+.ts-result-band{
+  background:var(--ink);padding:28px 28px 24px;flex-shrink:0;
+  position:relative;overflow:hidden;
+}
+.ts-result-band::before{
+  content:'';position:absolute;inset:0;opacity:.14;
+  background:url("data:image/svg+xml,%3Csvg viewBox='0 0 520 140' xmlns='http://www.w3.org/2000/svg'%3E%3Crect x='16' y='10' width='488' height='120' fill='none' stroke='%23d8ff3d' stroke-width='1.5'/%3E%3Cline x1='36' y1='10' x2='36' y2='130' stroke='%23d8ff3d' stroke-width='1'/%3E%3Cline x1='484' y1='10' x2='484' y2='130' stroke='%23d8ff3d' stroke-width='1'/%3E%3Cline x1='260' y1='10' x2='260' y2='130' stroke='%23d8ff3d' stroke-width='2'/%3E%3C/svg%3E") center/cover;
+}
+.ts-result-ey{font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--primary);margin-bottom:8px;position:relative}
+.ts-result-idx{
+  font-family:'Unbounded',sans-serif;font-weight:900;
+  font-size:72px;line-height:.9;letter-spacing:-.04em;
+  color:#f4f0e8;position:relative;
+}
+.ts-result-idx em{color:var(--primary);font-style:normal}
+.ts-result-label{
+  font-family:'Unbounded',sans-serif;font-weight:800;
+  font-size:16px;letter-spacing:-.02em;color:#f4f0e8;
+  margin-top:10px;position:relative;line-height:1.25;
+}
+.ts-result-sub{font-size:12px;color:rgba(244,240,232,.65);margin-top:6px;position:relative;line-height:1.5}
+.ts-result-close{
+  position:absolute;top:18px;right:20px;
+  background:rgba(244,240,232,.1);border:none;border-radius:50%;
+  width:32px;height:32px;cursor:pointer;color:#f4f0e8;
+  display:flex;align-items:center;justify-content:center;
+}
+.ts-result-close:hover{background:rgba(244,240,232,.2)}
+.ts-result-body{padding:20px 28px 24px;overflow-y:auto;flex:1;display:flex;flex-direction:column;gap:14px}
+.ts-bar-wrap{background:var(--surface);border-radius:12px;padding:16px 18px}
+.ts-bar-lbl{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--ink3);margin-bottom:10px}
+.ts-bar-track{height:10px;background:var(--line);border-radius:999px;overflow:hidden}
+.ts-bar-fill{height:100%;border-radius:999px;background:var(--primary);width:0;transition:width 1s cubic-bezier(.22,1,.36,1)}
+.ts-bar-scale{display:flex;justify-content:space-between;font-family:'Unbounded',sans-serif;font-size:10px;font-weight:700;color:var(--ink3);margin-top:6px}
+.ts-result-msg{
+  font-size:14px;color:var(--ink2);line-height:1.6;
+  background:var(--surface);border-radius:12px;padding:14px 18px;
+}
+.ts-result-msg strong{color:var(--ink);font-weight:700}
+.ts-btn-tg{
+  display:block;text-align:center;text-decoration:none;
+  font-family:'Onest',sans-serif;font-size:14px;font-weight:600;
+  color:var(--ink);background:var(--primary);
+  border:none;border-radius:999px;padding:13px 24px;
+  cursor:pointer;transition:background .15s;width:100%;
+}
+.ts-btn-tg:hover{background:#e3ff66}
+.ts-btn-close-result{
+  font-family:'Onest',sans-serif;font-size:14px;font-weight:600;
+  color:var(--ink3);background:transparent;border:1.5px solid var(--line);
+  border-radius:999px;padding:11px 24px;cursor:pointer;
+  transition:all .15s;width:100%;
+}
+.ts-btn-close-result:hover{border-color:var(--ink);color:var(--ink)}
+.ts-brand{
+  font-family:'Unbounded',sans-serif;font-size:12px;font-weight:800;
+  color:var(--ink3);letter-spacing:-.02em;text-align:center;
+  padding-bottom:4px;
+}
+.ts-brand span{color:var(--primary)}
+
+/* MOBILE */
+@media(max-width:540px){
+  .ts-modal{max-width:100%;border-radius:20px 20px 0 0;max-height:95vh}
+  .ts-overlay{align-items:flex-end;padding:0}
+  .ts-header{padding:18px 20px 16px}
+  .ts-body{padding:18px 20px 8px}
+  .ts-footer{padding:12px 20px 20px}
+  .ts-result-body{padding:16px 20px 20px}
+  .ts-result-band{padding:22px 20px 20px}
+  .ts-result-idx{font-size:58px}
+  .ts-counter{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- TRIGGER (можно удалить если открываешь только через кнопки сайта) -->
+<div style="padding:40px;text-align:center">
+  <button class="ts-trigger" id="ts-open">
+    <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+    Пройти тест-опросник
+  </button>
+  <p style="margin-top:12px;font-size:12px;color:var(--ink3)">для того, чтобы записаться на программу. Это займёт 2 минуты · 10 вопросов</p>
+</div>
+
+<!-- OVERLAY -->
+<div class="ts-overlay" id="ts-overlay" role="dialog" aria-modal="true" aria-label="Анкета записи tenssense">
+  <div class="ts-modal" id="ts-modal">
+    <div id="ts-quiz-root"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+'use strict';
+
+/* ─── ОТПРАВКА В TELEGRAM ─────────────────────────────── */
+var TG_TOKEN = '8819487544:AAGYK_3MsWvV2NyhOAw2YNmJ7oYCBCvVpJ4';
+var TG_CHAT  = '7339667637';
+
+function buildMessage(pct, label){
+  var expOpts      = ['Нулевой','Занимаюсь год','Больше двух лет'];
+  var tenOpts      = ['Развлечение и активный отдых','Вид искусства','Способ самопознания и самореализации'];
+  var goalOpts     = ['Научиться играть правильно и красиво','Участвовать в любительских турнирах','Стать профессиональным теннисистом'];
+  var langOpts     = ['Только на родном','Два языка','Три и более'];
+  var creativeOpts = ['Танцы','Музыка','Рисование','Ничем'];
+  var successOpts  = ['Талант','Стремление','Трудолюбие'];
+  var priOpts      = ['Процесс','Результат'];
+
+  function pick(qi, opts){ return state.ans[qi]!==null ? opts[state.ans[qi]] : '—'; }
+  function pickMulti(qi, opts){
+    var a = state.ans[qi];
+    if(!a||!a.length) return 'Не выбрано';
+    return a.map(function(i){ return opts[i]; }).join(', ');
+  }
+
+  return '🎾 *Новая анкета — tenssense*\n\n'
+    +'👤 *Имя:* '+state.name+'\n'
+    +'📱 *Telegram:* '+state.tg+'\n'
+    +'📊 *Индекс обучаемости:* '+pct+'% — '+label+'\n\n'
+    +'─── Анкета ───\n'
+    +'1. Опыт: '+pick(0, expOpts)+'\n'
+    +'2. Теннис — это: '+pick(1, tenOpts)+'\n'
+    +'3. Цель: '+pick(2, goalOpts)+'\n'
+    +'4. Возраст: '+(state.ans[3]||'—')+' лет\n'
+    +'5. Языки: '+pick(4, langOpts)+'\n'
+    +'6. Творчество: '+pickMulti(5, creativeOpts)+'\n'
+    +'7. Спорт ранее: '+pick(6, ['Да','Нет'])+'\n'
+    +'8. Геометрия: '+pick(7, ['Да','Нет'])+'\n'
+    +'9. Успех = : '+pick(8, successOpts)+'\n'
+    +'10. Важнее: '+pick(9, priOpts);
+}
+
+function sendToTelegram(pct, label){
+  var url  = 'https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage';
+  var body = JSON.stringify({
+    chat_id: TG_CHAT,
+    text: buildMessage(pct, label),
+    parse_mode: 'Markdown'
+  });
+  fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:body})
+    .catch(function(e){ console.warn('TG send error', e); });
+}
+
+var Q=[
+  {id:1, text:'Какой у вас опыт в теннисе?', type:'single', score:false,
+   opts:['Нулевой','Занимаюсь год','Больше двух лет']},
+  {id:2, text:'Что для вас теннис?', type:'single', score:false,
+   opts:['Развлечение и активный отдых','Вид искусства','Способ самопознания и самореализации']},
+  {id:3, text:'Какие цели в теннисе?', type:'single', score:false,
+   opts:['Научиться играть правильно и красиво','Участвовать в любительских турнирах','Стать профессиональным теннисистом']},
+  {id:4, text:'Сколько вам полных лет?', type:'age', score:false},
+  {id:5, text:'На скольких языках вы можете свободно говорить?', type:'single', score:true,
+   opts:['Только на родном','Два языка','Три и более'], pts:[1,2,3]},
+  {id:6, text:'Обучались ли какой-либо творческой деятельности?', type:'multi', score:true,
+   opts:['Танцы','Музыка','Рисование','Ничем'], pts:[1,1,1,0]},
+  {id:7, text:'Занимались ли ранее каким-либо видом спорта?', type:'yesno', score:true,
+   opts:['Да','Нет'], pts:[3,1]},
+  {id:8, text:'В школе любили геометрию?', type:'yesno', score:true,
+   opts:['Да','Нет'], pts:[3,1]},
+  {id:9, text:'Что важнее для успеха в любом деле?', type:'single', score:true,
+   opts:['Талант','Стремление','Трудолюбие'], pts:[1,2,3]},
+  {id:10, text:'Что для вас важнее в том, чем вы занимаетесь?', type:'single', score:false,
+   opts:['Процесс','Результат']}
+];
+
+var TOTAL_STEPS = Q.length; /* 10 */
+var MAX = 15;
+
+/* state.intro хранит имя и ТГ, введённые до теста */
+var state = {cur:-1, ans:Array(10).fill(null), multi:[], name:'', tg:''};
+
+/* ─── ПОДСЧЁТ ─────────────────────────────────────────── */
+function calcScore(){
+  var s=0;
+  [4,5,6,7,8].forEach(function(qi){
+    var q=Q[qi], a=state.ans[qi];
+    if(a===null) return;
+    if(q.type==='multi'){a.forEach(function(i){s+=q.pts[i]||0});}
+    else{s+=q.pts[a]||0;}
+  });
+  return s;
+}
+
+function getResult(pct){
+  if(pct>=80) return{
+    label:'Высокий индекс обучаемости',
+    sub:'Быстро схватываешь новое. Прогресс будет заметен уже в первые недели.',
+    cta:'Запишись — разберём твои цели и стартуем.'
+  };
+  if(pct>=55) return{
+    label:'Хороший потенциал',
+    sub:'Твёрдая основа. Нужно чуть больше времени на закрепление движений — это норма.',
+    cta:'Оставь заявку — подберём формат и темп.'
+  };
+  return{
+    label:'Осваиваешь в своём темпе',
+    sub:'Программа tenssense именно под такой темп: пошагово, без суеты, с результатом.',
+    cta:'Запишись на консультацию — обсудим старт.'
+  };
+}
+
+/* ─── РЕНДЕР ──────────────────────────────────────────── */
+function render(){
+  var root = document.getElementById('ts-quiz-root');
+  if(state.cur === -1){ renderIntro(root); }
+  else if(state.cur < Q.length){ renderQ(root); }
+  else{ renderResult(root); }
+}
+
+function prog(){
+  if(state.cur < 0) return 0;
+  return Math.round((state.cur / TOTAL_STEPS) * 100);
+}
+
+function canNext(){
+  var c=state.cur, q=Q[c];
+  if(q.type==='age')   return state.ans[c]!==null && String(state.ans[c]).length>0;
+  if(q.type==='multi') return state.multi.length>0;
+  return state.ans[c]!==null;
+}
+
+/* ─── ШАГ 0: INTRO (имя + ТГ) ────────────────────────── */
+function renderIntro(root){
+  root.innerHTML =
+    '<div class="ts-progress"><div class="ts-progress-fill" style="width:0%"></div></div>'
+    +'<div class="ts-header">'
+      +'<div class="ts-header-top">'
+        +'<span class="ts-eyebrow">ИНДЕКС ОБУЧАЕМОСТИ · tenssense</span>'
+        +'<button class="ts-close" id="ts-close-btn" type="button" aria-label="Закрыть">'
+          +'<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+        +'</button>'
+      +'</div>'
+      +'<div class="ts-counter" style="opacity:0">0/10</div>'
+    +'</div>'
+    +'<div class="ts-body">'
+      +'<div class="ts-question">Прежде чем начать — познакомимся.</div>'
+      +'<div class="ts-intro-fields">'
+        +'<input class="ts-intro-field" id="ts-iname" type="text" placeholder="Ваше имя" autocomplete="given-name" value="'+state.name+'">'
+        +'<span class="ts-intro-errmsg" id="ts-iname-err">Введи своё имя</span>'
+        +'<input class="ts-intro-field" id="ts-itg" type="text" placeholder="Ник в Telegram (@username)" autocomplete="off" value="'+state.tg+'">'
+        +'<span class="ts-intro-errmsg" id="ts-itg-err">Введи ник в Telegram</span>'
+      +'</div>'
+    +'</div>'
+    +'<div class="ts-footer">'
+      +'<span></span>'
+      +'<button class="ts-btn-next" id="ts-intro-next" type="button">Начать тест →</button>'
+    +'</div>';
+
+  document.getElementById('ts-close-btn').addEventListener('click', closeModal);
+  document.getElementById('ts-intro-next').addEventListener('click', function(){
+    var nameEl  = document.getElementById('ts-iname');
+    var tgEl    = document.getElementById('ts-itg');
+    var nameErr = document.getElementById('ts-iname-err');
+    var tgErr   = document.getElementById('ts-itg-err');
+    var ok = true;
+
+    /* имя — просто непустое */
+    if(!nameEl.value.trim()){
+      nameEl.classList.add('ts-err'); nameErr.classList.add('show'); ok=false;
+    } else {
+      nameEl.classList.remove('ts-err'); nameErr.classList.remove('show');
+    }
+
+    /* ник ТГ — латиница, цифры, подчёркивание, необязательный @ в начале, 5+ символов */
+    var tgVal = tgEl.value.trim();
+    var tgClean = tgVal.replace(/^@/, ''); /* убираем @ для проверки */
+    var tgValid = /^[a-zA-Z0-9_]{4,}$/.test(tgClean);
+    if(!tgVal || !tgValid){
+      tgEl.classList.add('ts-err');
+      tgErr.textContent = !tgVal ? 'Введи ник в Telegram' : 'Только латиница, цифры и _ · мин. 5 символов';
+      tgErr.classList.add('show'); ok=false;
+    } else {
+      tgEl.classList.remove('ts-err'); tgErr.classList.remove('show');
+    }
+
+    if(!ok) return;
+    state.name = nameEl.value.trim();
+    state.tg   = tgVal.startsWith('@') ? tgVal : '@'+tgVal; /* добавляем @ если нет */
+    state.cur  = 0;
+    render();
+  });
+}
+
+/* ─── РЕНДЕР ВОПРОСА ──────────────────────────────────── */
+function renderQ(root){
+  var q = Q[state.cur];
+  var isMulti = q.type==='multi';
+  var hint = isMulti ? '<p class="ts-hint">Можно выбрать несколько вариантов</p>' : '';
+  var inner = '';
+
+  if(q.type==='age'){
+    inner = '<div class="ts-age-wrap">'
+      +'<input class="ts-age-input" type="number" min="4" max="99" id="ts-age" placeholder="30" value="'+(state.ans[4]||'')+'">'
+      +'<span class="ts-age-lbl">полных лет</span>'
+      +'</div>';
+
+  } else {
+    inner += '<div class="ts-opts">';
+    q.opts.forEach(function(o,i){
+      var sel = isMulti ? state.multi.includes(i) : (state.ans[state.cur]===i);
+      var cls = 'ts-opt'+(isMulti?' multi':'')+(sel?' selected':'');
+      var mk  = sel ? '✓' : (i+1);
+      inner += '<button class="'+cls+'" data-i="'+i+'" type="button">'
+        +'<span class="ts-marker">'+mk+'</span>'+o+'</button>';
+    });
+    inner += '</div>';
+  }
+
+  var isLast     = state.cur === Q.length-1;
+  var btnLabel   = isLast ? 'Узнать результат →' : 'Далее →';
+  var btnDisabled = canNext() ? '' : ' disabled';
+
+  root.innerHTML =
+    '<div class="ts-progress"><div class="ts-progress-fill" style="width:'+prog()+'%"></div></div>'
+    +'<div class="ts-header">'
+      +'<div class="ts-header-top">'
+        +'<span class="ts-eyebrow">ИНДЕКС ОБУЧАЕМОСТИ · tenssense</span>'
+        +'<button class="ts-close" id="ts-close-btn" type="button" aria-label="Закрыть">'
+          +'<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+        +'</button>'
+      +'</div>'
+      +'<div class="ts-counter"><em>'+(state.cur+1)+'</em>/'+TOTAL_STEPS+'</div>'
+    +'</div>'
+    +'<div class="ts-body">'
+      +'<div class="ts-question">'+q.text+'</div>'
+      +hint+inner
+    +'</div>'
+    +'<div class="ts-footer">'
+      +'<button class="ts-btn-back" id="ts-back" type="button">'+(state.cur>0?'← Назад':'')+'</button>'
+      +'<button class="ts-btn-next" id="ts-next" type="button"'+btnDisabled+'>'+btnLabel+'</button>'
+    +'</div>';
+
+  /* события */
+  var closeBtn = document.getElementById('ts-close-btn');
+  if(closeBtn) closeBtn.addEventListener('click', closeModal);
+
+  var backBtn = document.getElementById('ts-back');
+  if(backBtn && state.cur>0) backBtn.addEventListener('click', function(){ state.cur--; render(); });
+
+  var nextBtn = document.getElementById('ts-next');
+  if(nextBtn){
+    nextBtn.addEventListener('click', function(){
+      if(q.type==='multi') state.ans[state.cur]=[].concat(state.multi);
+      state.cur++;
+      state.multi=[];
+      render();
+    });
+  }
+
+  if(q.type==='age'){
+    var inp = document.getElementById('ts-age');
+    /* показываем подсказку об ошибке возраста */
+    var ageHint = document.createElement('p');
+    ageHint.style.cssText='font-size:11px;color:var(--negative);margin-top:8px;display:none';
+    inp.parentNode.appendChild(ageHint);
+
+    inp.addEventListener('input', function(){
+      var v = parseInt(this.value, 10);
+      var nb = document.getElementById('ts-next');
+      if(!this.value || isNaN(v) || v < 5 || v > 99){
+        state.ans[4] = null;
+        if(nb) nb.disabled = true;
+        ageHint.textContent = !this.value ? '' : (v < 5 ? 'Минимальный возраст — 5 лет' : 'Максимальный возраст — 99 лет');
+        ageHint.style.display = this.value ? 'block' : 'none';
+      } else {
+        state.ans[4] = this.value;
+        if(nb) nb.disabled = false;
+        ageHint.style.display = 'none';
+      }
+    });
+
+  } else {
+    root.querySelectorAll('.ts-opt').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        var i = parseInt(this.dataset.i);
+        if(isMulti){
+          var noneIdx = Q[state.cur].opts.length - 1;
+          var isNone  = (i === noneIdx);
+          if(isNone){
+            state.multi = [noneIdx];
+          } else {
+            state.multi = state.multi.filter(function(x){ return x !== noneIdx; });
+            var idx = state.multi.indexOf(i);
+            if(idx>-1){ state.multi.splice(idx,1); } else { state.multi.push(i); }
+          }
+          state.ans[state.cur] = [].concat(state.multi);
+        } else {
+          state.ans[state.cur] = i;
+        }
+        render();
+      });
+    });
+  }
+}
+
+/* ─── РЕЗУЛЬТАТ ───────────────────────────────────────── */
+function renderResult(root){
+  var score = calcScore();
+  var pct   = Math.round((score/MAX)*100);
+  var r     = getResult(pct);
+  var name  = state.name || 'друг';
+
+  /* отправляем в TG сразу при показе результата */
+  sendToTelegram(pct, r.label);
+
+  root.innerHTML =
+    '<div class="ts-result-band">'
+      +'<div class="ts-result-ey">РЕЗУЛЬТАТ · ИНДЕКС ОБУЧАЕМОСТИ</div>'
+      +'<div class="ts-result-idx">'+pct+'<em>%</em></div>'
+      +'<div class="ts-result-label">'+r.label+'</div>'
+      +'<button class="ts-result-close" id="ts-rclose" type="button" aria-label="Закрыть">'
+        +'<svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'
+      +'</button>'
+    +'</div>'
+    +'<div class="ts-result-body">'
+      +'<div class="ts-bar-wrap">'
+        +'<div class="ts-bar-lbl">Индекс обучаемости</div>'
+        +'<div class="ts-bar-track"><div class="ts-bar-fill" id="ts-rfill"></div></div>'
+        +'<div class="ts-bar-scale"><span>0%</span><span>25%</span><span>50%</span><span>75%</span><span>100%</span></div>'
+      +'</div>'
+      +'<div class="ts-result-msg">'
+        +'<strong>Отлично, '+name+'!</strong> Благодарю за ответы — напиши мне, и мы разберём, что означает эта цифра, и расскажу с чего стоит начать работу.'
+      +'</div>'
+      +'<a class="ts-btn-tg" href="https://t.me/tenssensey" target="_blank" rel="noopener">Написать в Telegram →</a>'
+      +'<button class="ts-btn-close-result" id="ts-close-res" type="button">Закрыть</button>'
+      +'<div class="ts-brand">tenssense<span>.</span></div>'
+    +'</div>';
+
+  setTimeout(function(){
+    var f = document.getElementById('ts-rfill');
+    if(f) f.style.width = pct+'%';
+  },120);
+
+  document.getElementById('ts-rclose').addEventListener('click', closeModal);
+  document.getElementById('ts-close-res').addEventListener('click', closeModal);
+}
+
+/* ─── ОТКРЫТИЕ / ЗАКРЫТИЕ ─────────────────────────────── */
+function openModal(){
+  state = {cur:-1, ans:Array(10).fill(null), multi:[], name:'', tg:''};
+  render();
+  document.getElementById('ts-overlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeModal(){
+  document.getElementById('ts-overlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+
+/* ─── WIRE UP ──────────────────────────────────────────── */
+var openBtn = document.getElementById('ts-open');
+if(openBtn) openBtn.addEventListener('click', openModal);
+
+document.getElementById('ts-overlay').addEventListener('click', function(e){
+  if(e.target===this) closeModal();
+});
+
+document.addEventListener('keydown', function(e){
+  if(e.key==='Escape') closeModal();
+});
+
+/* перехватываем все кнопки сайта с href="#contact" */
+document.querySelectorAll('a[href="#contact"], a[href="#ts-quiz"]').forEach(function(a){
+  a.addEventListener('click', function(e){
+    e.preventDefault();
+    openModal();
+  });
+});
+
+})();
+</script>
+
+</body>
+</html>
