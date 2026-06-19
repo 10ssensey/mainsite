@@ -81,8 +81,8 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
 /* BODY */
 .ts-body{padding:22px 28px 8px;overflow-y:auto;flex:1}
 .ts-question{
-  font-family:'Unbounded',sans-serif;font-weight:700;
-  font-size:17px;letter-spacing:-.02em;line-height:1.35;
+  font-family:'Unbounded',sans-serif;font-weight:400;
+  font-size:19px;letter-spacing:-.02em;line-height:1.35;
   color:var(--ink);margin-bottom:18px;
 }
 .ts-hint{font-size:11px;color:var(--ink3);margin-bottom:14px;margin-top:-10px}
@@ -253,9 +253,9 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
 <div style="padding:40px;text-align:center"></br></br></br></br></br></br></br>
   <button class="ts-trigger" id="ts-open">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-    Пройти тест-опросник
+    Заполнить анкету и пройти тест-опрросник
   </button>
-  <p style="margin-top:12px;font-size:12px;color:var(--ink3)">для того, чтобы записаться на программу.</br>Это займёт 2 минуты · 10 вопросов</p>
+  <p style="margin-top:12px;font-size:12px;color:var(--ink3)">Прежде чем, записаться на программу.</br>Это займёт 2 минуты · 10 вопросов</p>
 </div>
 
 <!-- OVERLAY -->
@@ -297,7 +297,7 @@ function buildMessage(pct, label){
     +'1. Опыт: '+pick(0, expOpts)+'\n'
     +'2. Теннис — это: '+pick(1, tenOpts)+'\n'
     +'3. Цель: '+pick(2, goalOpts)+'\n'
-    +'4. Возраст: '+(state.ans[4]||'—')+' лет\n'
+    +'4. Возраст: '+(state.ans[3]||'—')+' лет\n'
     +'5. Языки: '+pick(4, langOpts)+'\n'
     +'6. Творчество: '+pickMulti(5, creativeOpts)+'\n'
     +'7. Спорт ранее: '+pick(6, ['Да','Нет'])+'\n'
@@ -466,7 +466,7 @@ function renderQ(root){
 
   if(q.type==='age'){
     inner = '<div class="ts-age-wrap">'
-      +'<input class="ts-age-input" type="number" min="4" max="99" id="ts-age" placeholder="30" value="'+(state.ans[4]||'')+'">'
+      +'<input class="ts-age-input" type="number" min="5" max="99" id="ts-age" placeholder="30" value="'+(state.ans[state.cur]||'')+'">'
       +'<span class="ts-age-lbl">полных лет</span>'
       +'</div>';
 
@@ -534,12 +534,12 @@ function renderQ(root){
       var v = parseInt(this.value, 10);
       var nb = document.getElementById('ts-next');
       if(!this.value || isNaN(v) || v < 5 || v > 99){
-        state.ans[4] = null;
+        state.ans[state.cur] = null;
         if(nb) nb.disabled = true;
         ageHint.textContent = !this.value ? '' : (v < 5 ? 'Минимальный возраст — 5 лет' : 'Максимальный возраст — 99 лет');
         ageHint.style.display = this.value ? 'block' : 'none';
       } else {
-        state.ans[4] = this.value;
+        state.ans[state.cur] = this.value;
         if(nb) nb.disabled = false;
         ageHint.style.display = 'none';
       }
@@ -597,7 +597,7 @@ function renderResult(root){
       +'<div class="ts-result-msg">'
         +'<strong>Отлично, '+name+'!</strong> Благодарю за ответы — напиши мне, и мы разберём, что означает эта цифра, и расскажу с чего стоит начать работу.'
       +'</div>'
-      +'<a class="ts-btn-tg" href="https://t.me/tenssensey" target="_blank" rel="noopener">Написать в Telegram →</a>'
+      +'<a class="ts-btn-tg" href="https://t.me/m/hSc8BrNUZjYy" target="_blank" rel="noopener">Написать в Telegram →</a>'
       +'<button class="ts-btn-close-result" id="ts-close-res" type="button">Закрыть</button>'
       +'<div class="ts-brand">tenssense<span>.</span></div>'
     +'</div>';
