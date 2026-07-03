@@ -250,12 +250,12 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
 <body>
 
 <!-- TRIGGER (можно удалить если открываешь только через кнопки сайта) -->
-<div style="padding:40px;text-align:center"></br></br></br></br></br></br></br>
+<div style="padding:40px;text-align:center">
   <button class="ts-trigger" id="ts-open">
     <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24" aria-hidden="true"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
-    Заполнить анкету и пройти тест-опрросник
+    Записаться на программу
   </button>
-  <p style="margin-top:12px;font-size:12px;color:var(--ink3)">Прежде чем, записаться на программу.</br>Это займёт 2 минуты · 10 вопросов</p>
+  <p style="margin-top:12px;font-size:12px;color:var(--ink3)">Займёт 2 минуты · 10 вопросов</p>
 </div>
 
 <!-- OVERLAY -->
@@ -272,6 +272,7 @@ body{font-family:'Onest',sans-serif;color:var(--ink)}
 /* ─── ОТПРАВКА В TELEGRAM ─────────────────────────────── */
 var TG_TOKEN = '8819487544:AAGYK_3MsWvV2NyhOAw2YNmJ7oYCBCvVpJ4';
 var TG_CHAT  = '7339667637';
+var W3F_KEY  = 'ae363068-f24c-4e58-a733-efe2a107ee4c';
 
 function buildMessage(pct, label){
   var expOpts      = ['Нулевой','Занимаюсь год','Больше двух лет'];
@@ -289,11 +290,11 @@ function buildMessage(pct, label){
     return a.map(function(i){ return opts[i]; }).join(', ');
   }
 
-  return '🎾 *Новая анкета — tenssense*\n\n'
-    +'👤 *Имя:* '+state.name+'\n'
-    +'📱 *Telegram:* '+state.tg+'\n'
-    +'📊 *Индекс обучаемости:* '+pct+'% — '+label+'\n\n'
-    +'─── Анкета ───\n'
+  return '🎾 Новая анкета — tenssense\n\n'
+    +'Имя: '+state.name+'\n'
+    +'Telegram: '+state.tg+'\n'
+    +'Индекс обучаемости: '+pct+'% — '+label+'\n\n'
+    +'— Анкета —\n'
     +'1. Опыт: '+pick(0, expOpts)+'\n'
     +'2. Теннис — это: '+pick(1, tenOpts)+'\n'
     +'3. Цель: '+pick(2, goalOpts)+'\n'
@@ -307,14 +308,29 @@ function buildMessage(pct, label){
 }
 
 function sendToTelegram(pct, label){
-  var url  = 'https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage';
-  var body = JSON.stringify({
-    chat_id: TG_CHAT,
-    text: buildMessage(pct, label),
-    parse_mode: 'Markdown'
-  });
-  fetch(url, {method:'POST', headers:{'Content-Type':'application/json'}, body:body})
-    .catch(function(e){ console.warn('TG send error', e); });
+  var msg = buildMessage(pct, label);
+
+  /* 1. Web3Forms — надёжный прокси, работает из любой страны */
+  fetch('https://api.web3forms.com/submit', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json', 'Accept': 'application/json'},
+    body: JSON.stringify({
+      access_key: W3F_KEY,
+      subject: 'tenssense · новая анкета — ' + state.name,
+      message: msg,
+      name: state.name,
+      telegram: state.tg,
+      index: pct + '%',
+      botcheck: ''
+    })
+  }).catch(function(e){ console.warn('Web3Forms error', e); });
+
+  /* 2. Прямой TG — как дублёр */
+  fetch('https://api.telegram.org/bot'+TG_TOKEN+'/sendMessage', {
+    method: 'POST',
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({chat_id: TG_CHAT, text: msg})
+  }).catch(function(e){ console.warn('TG direct error', e); });
 }
 
 var Q=[
